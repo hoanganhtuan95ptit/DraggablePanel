@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimary">
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/app_bar_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:gravity="center_vertical"
+                app:layout_scrollFlags="scroll|enterAlwaysCollapsed|snap">
+
+                <ImageView
+                    style="@style/Button"
+                    android:layout_marginStart="@dimen/margin"
+                    android:src="@drawable/ic_search"
+                    android:tint="#0000" />
+
+                <ImageView
+                    style="@style/Button"
+                    android:src="@drawable/ic_camera"
+                    android:tint="#000" />
+
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_margin="@dimen/padding"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/img_demo" />
+            </LinearLayout>
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/frame_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/colorPrimary"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <Space
+                    android:layout_width="@dimen/padding"
+                    android:layout_height="@dimen/padding" />
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/root_holder_video_home"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:layout_marginStart="@dimen/padding"
+                    android:layout_marginEnd="@dimen/padding"
+                    app:cardCornerRadius="@dimen/margin">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/img_demo" />
+                </androidx.cardview.widget.CardView>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/padding"
+                    android:layout_marginTop="@dimen/margin"
+                    android:layout_marginEnd="@dimen/padding"
+                    android:text="@string/test"
+                    android:textColor="#000"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/padding"
+                    android:layout_marginTop="@dimen/margin"
+                    android:layout_marginEnd="@dimen/padding"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/img_demo" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin"
+                        android:ellipsize="end"
+                        android:lines="1"
+                        android:text="@string/test"
+                        android:textColor="@color/textColorNormal"
+                        android:textSize="13sp" />
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/padding"
+                    android:layout_marginTop="@dimen/padding"
+                    android:layout_marginEnd="@dimen/padding"
+                    android:text="Trending"
+                    android:textColor="#000000"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+
+                <androidx.core.widget.NestedScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:layout_width="1000dp"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <include layout="@layout/holder_space" />
+
+                        <LinearLayout
+                            android:id="@+id/root_holder_video_normal"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="@dimen/margin">
+
+                            <androidx.cardview.widget.CardView
+                                android:layout_width="160dp"
+                                android:layout_height="90dp"
+                                app:cardCornerRadius="@dimen/margin">
+
+                                <ImageView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:scaleType="centerCrop"
+                                    android:src="@drawable/img_demo" />
+                            </androidx.cardview.widget.CardView>
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/margin"
+                                android:ellipsize="end"
+                                android:lines="2"
+                                android:text="@string/test"
+                                android:textColor="#000000"
+                                android:textSize="13sp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/root_holder_video_normal2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="@dimen/margin">
+
+                            <androidx.cardview.widget.CardView
+                                android:layout_width="160dp"
+                                android:layout_height="90dp"
+                                app:cardCornerRadius="@dimen/margin">
+
+                                <ImageView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:scaleType="centerCrop"
+                                    android:src="@drawable/img_demo" />
+                            </androidx.cardview.widget.CardView>
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/margin"
+                                android:ellipsize="end"
+                                android:lines="2"
+                                android:text="@string/test"
+                                android:textColor="#000000"
+                                android:textSize="13sp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/root_holder_video_normal3"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="@dimen/margin">
+
+                            <androidx.cardview.widget.CardView
+                                android:layout_width="160dp"
+                                android:layout_height="90dp"
+                                app:cardCornerRadius="@dimen/margin">
+
+                                <ImageView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:scaleType="centerCrop"
+                                    android:src="@drawable/img_demo" />
+                            </androidx.cardview.widget.CardView>
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/margin"
+                                android:ellipsize="end"
+                                android:lines="2"
+                                android:text="@string/test"
+                                android:textColor="#000000"
+                                android:textSize="13sp" />
+                        </LinearLayout>
+
+                        <include layout="@layout/holder_space" />
+                    </LinearLayout>
+                </androidx.core.widget.NestedScrollView>
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+    <View
+        android:id="@+id/v_background"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:alpha="0"
+        android:background="#000000" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_alignParentBottom="true"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <ImageView
+            style="@style/Button"
+            android:src="@drawable/ic_home"
+            android:tint="#EF0020" />
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <ImageView
+            style="@style/Button"
+            android:src="@drawable/ic_video"
+            android:tint="#CBCBCB" />
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <ImageView
+            style="@style/Button"
+            android:src="@drawable/ic_profile"
+            android:tint="#CBCBCB" />
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+    </LinearLayout>
+
+    <com.hoanganhtuan95ptit.drag.view.DragFrame
+        android:id="@+id/drag_frame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
+</RelativeLayout>

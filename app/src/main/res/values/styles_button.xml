@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Button">
+        <item name="android:layout_height">@dimen/icon_size</item>
+        <item name="android:layout_width">@dimen/icon_size</item>
+        <item name="android:scaleType">centerInside</item>
+        <item name="android:padding">@dimen/margin</item>
+    </style>
+
+
+    <style name="Button.Close.Grey" parent="Button">
+        <item name="android:src">@drawable/ic_close_grey_48</item>
+    </style>
+
+    <style name="Button.Play.Grey" parent="Button">
+        <item name="android:src">@drawable/ic_play_grey_48</item>
+    </style>
+
+    <style name="Button.Pause.Grey" parent="Button">
+        <item name="android:src">@drawable/ic_pause_grey_48</item>
+    </style>
+
+</resources>
