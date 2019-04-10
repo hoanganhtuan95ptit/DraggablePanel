@@ -5,6 +5,8 @@
 
 This application is built based on my understanding of android, so it may not be really good, I look forward to your contributions and help to make the application more complete and optimal. Thank you!!!
 
+![Alt text](ezgif.com-resize.gif)
+
 
 #### add frame top
 ```java
