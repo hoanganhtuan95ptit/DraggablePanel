@@ -18,7 +18,7 @@ This application is built based on my understanding of android, so it may not be
         android:layout_height="match_parent" />
 ```
 
-#### add frame top
+#### Add frame top
 ```java
 dragFrame.setTopFragment(getSupportFragmentManager(), PlayFragment.newInstance());
 ```
@@ -43,32 +43,32 @@ dragFrame.maximize();
 dragFrame.minimize();
 ```
 
-#### close
+#### Close
 ```java
 dragFrame.close();
 ```
 
-#### set height waiting frame top - frame top change the size when max
+#### Set height waiting frame top - frame top change the size when max
 ```java
 dragFrame.setHeightWaiting(int heightWaiting);
 ```
 
-#### set height frame top - Immediately change the size
+#### Set height frame top - Immediately change the size
 ```java
 dragFrame.setHeight(int height);
 ```
 
-#### check max
+#### Check max
 ```java
 dragFrame.isMaximized();
 ```
 
-#### check min
+#### Check min
 ```java
 dragFrame.isMinimized();
 ```
 
-#### check close
+#### Check close
 ```java
 dragFrame.isClosed();
 ```
