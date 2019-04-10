@@ -8,6 +8,16 @@ This application is built based on my understanding of android, so it may not be
 ![Alt text](ezgif.com-resize.gif)
 
 
+#### XML
+
+```java
+
+    <com.hoanganhtuan95ptit.drag.view.DragFrame
+        android:id="@+id/drag_frame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+```
+
 #### add frame top
 ```java
 dragFrame.setTopFragment(getSupportFragmentManager(), PlayFragment.newInstance());
