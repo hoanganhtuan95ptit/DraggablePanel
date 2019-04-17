@@ -5,8 +5,9 @@
 
 This application is built based on my understanding of android, so it may not be really good, I look forward to your contributions and help to make the application more complete and optimal. Thank you!!!
 
-![Alt text](ezgif.com-resize.gif)
-
+![Alt text](output/ezgif.com-video-to-gif.gif) | ![Alt text](output/Screenshot_20190417-173713.png)  | ![Alt text](output/Screenshot_20190417-173738.png) 
+--- | --- | --- 
+![Alt text](output/Screenshot_20190417-173732.png) | ![Alt text](output/Screenshot_20190417-173744.png)  | ![Alt text](output/Screenshot_20190417-173721.png) 
 
 #### XML
 
