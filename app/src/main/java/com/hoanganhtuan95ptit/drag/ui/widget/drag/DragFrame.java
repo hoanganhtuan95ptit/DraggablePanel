@@ -1,4 +1,4 @@
-package com.hoanganhtuan95ptit.drag.view;
+package com.hoanganhtuan95ptit.drag.ui.widget.drag;
 
 import android.animation.Animator;
 import android.animation.ValueAnimator;
@@ -14,11 +14,11 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.android.material.appbar.AppBarLayout;
+import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.hoanganhtuan95ptit.drag.App;
 import com.hoanganhtuan95ptit.drag.R;
 import com.hoanganhtuan95ptit.drag.utils.Utils;
-import com.google.android.material.appbar.AppBarLayout;
-import com.google.android.material.appbar.CollapsingToolbarLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -43,7 +43,7 @@ public class DragFrame extends FrameLayout {
     private static final float PERCENT_START_CHANGE_WIDTH = 0.9f;
     private static final float PERCENT_END_CHANGE_ALPHA = 0.7f;
 
-    private static final int HEIGHT_MIN_DEFAULT = (int) (Utils.dp2px(60));
+    private static final int HEIGHT_MIN_DEFAULT = (int) (Utils.dp2px(80));
     private static final int HEIGHT_MAX_DEFAULT = (int) (Utils.getScreenWidth() * 9f / 16);
 
     @BindView(R.id.card_view)
@@ -122,6 +122,7 @@ public class DragFrame extends FrameLayout {
         int width = Utils.getScreenWidth();
         int height = Utils.getScreenHeight() - Utils.getStatusBarHeight();
 
+        radius = (int) Utils.dp2px(8);
         edge = App.self().getPadding();
         bottom = App.self().getPadding() + heightBottom;
 
@@ -558,6 +559,7 @@ public class DragFrame extends FrameLayout {
 
     protected int edge;
     protected int bottom;
+    protected int radius;
 
     protected int widthMax;
     protected int heightMax;
@@ -619,6 +621,7 @@ public class DragFrame extends FrameLayout {
         cardViewParams.rightMargin = currentEdge;
         cardViewParams.leftMargin = currentEdge;
         cardViewParams.bottomMargin = currentBottom;
+        cardView.setRadius(radius * currentPercent);
         cardView.setLayoutParams(cardViewParams);
     }
 

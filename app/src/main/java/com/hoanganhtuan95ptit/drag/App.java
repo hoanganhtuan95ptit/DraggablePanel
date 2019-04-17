@@ -4,7 +4,9 @@ import android.app.Application;
 
 import com.hoanganhtuan95ptit.drag.utils.Utils;
 
-public class App extends Application {
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
+
+public class App extends Application implements Constants {
     private static App self;
 
     public static App self() {
@@ -20,6 +22,11 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
         self = this;
+
+        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
+                .setDefaultFontPath("fonts/Roboto-Medium.ttf")
+                .setFontAttrId(R.attr.fontPath)
+                .build());
 
         marginThree = (int) Utils.dp2px(4);
         padding = (int) Utils.dp2px(16);

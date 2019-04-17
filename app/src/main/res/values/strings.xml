@@ -1,4 +1,40 @@
 <resources>
     <string name="app_name">Drag</string>
     <string name="test">Inspirational Dream - (No Copyright) Beautiful and Cinematic Background Music (Download MP3) by AShamaluevMusic playlists on SoundCloud</string>
+
+    <string name="video_title_test_0"><![CDATA[<font color="#000000"><b>Spider-Man: Into the Spider-Verse is a comic book come to life, and the best animated movie of 2018</b></font>]]></string>
+    <string name="video_title_test_1"><![CDATA[<font color="#000000"><b>Spider-Man: Into the Spider-Verse is a comic book come to life, and the best animated movie of 2018</b></font>]]></string>
+    <string name="video_title_test_2"><![CDATA[<font color="#000000"><b>Spider-Man: Into the Spider-Verse is a comic book come to life, and the best animated movie of 2018</b></font>]]></string>
+    <string name="video_title_test_3"><![CDATA[<font color="#000000"><b>Spider-Man: Into the Spider-Verse is a comic book come to life, and the best animated movie of 2018</b></font>]]></string>
+    <string name="video_title_test_4"><![CDATA[<font color="#000000"><b>Spider-Man: Into the Spider-Verse is a comic book come to life, and the best animated movie of 2018</b></font>]]></string>
+    <string name="video_title_test_5"><![CDATA[<font color="#000000"><b>Spider-Man: Into the Spider-Verse is a comic book come to life, and the best animated movie of 2018</b></font>]]></string>
+    <string name="video_title_test_6"><![CDATA[<font color="#000000"><b>Spider-Man: Into the Spider-Verse is a comic book come to life, and the best animated movie of 2018</b></font>]]></string>
+    <string name="video_title_test_7"><![CDATA[<font color="#000000"><b>Spider-Man: Into the Spider-Verse is a comic book come to life, and the best animated movie of 2018</b></font>]]></string>
+    <string name="video_title_test_8"><![CDATA[<font color="#000000"><b>Spider-Man: Into the Spider-Verse is a comic book come to life, and the best animated movie of 2018</b></font>]]></string>
+    <string name="video_title_test_9"><![CDATA[<font color="#000000"><b>Spider-Man: Into the Spider-Verse is a comic book come to life, and the best animated movie of 2018</b></font>]]></string>
+
+    <string name="video_title_2_test_0"><![CDATA[<font color="#000000"><b>Spider-Man: Into the Spider-Verse is a comic book come to life, and the best animated movie of 2018</b></font>]]></string>
+    <string name="video_title_2_test_1"><![CDATA[<font color="#000000"><b>Spider-Man: Into the Spider-Verse is a comic book come to life, and the best animated movie of 2018</b></font>]]></string>
+    <string name="video_title_2_test_2"><![CDATA[<font color="#000000"><b>Spider-Man: Into the Spider-Verse is a comic book come to life, and the best animated movie of 2018</b></font>]]></string>
+    <string name="video_title_2_test_3"><![CDATA[<font color="#000000"><b>Spider-Man: Into the Spider-Verse is a comic book come to life, and the best animated movie of 2018</b></font>]]></string>
+    <string name="video_title_2_test_4"><![CDATA[<font color="#000000"><b>Spider-Man: Into the Spider-Verse is a comic book come to life, and the best animated movie of 2018</b></font>]]></string>
+    <string name="video_title_2_test_5"><![CDATA[<font color="#000000"><b>Spider-Man: Into the Spider-Verse is a comic book come to life, and the best animated movie of 2018</b></font>]]></string>
+    <string name="video_title_2_test_6"><![CDATA[<font color="#000000"><b>Spider-Man: Into the Spider-Verse is a comic book come to life, and the best animated movie of 2018</b></font>]]></string>
+    <string name="video_title_2_test_7"><![CDATA[<font color="#000000"><b>Spider-Man: Into the Spider-Verse is a comic book come to life, and the best animated movie of 2018</b></font>]]></string>
+    <string name="video_title_2_test_8"><![CDATA[<font color="#000000"><b>Spider-Man: Into the Spider-Verse is a comic book come to life, and the best animated movie of 2018</b></font>]]></string>
+    <string name="video_title_2_test_9"><![CDATA[<font color="#000000"><b>Spider-Man: Into the Spider-Verse is a comic book come to life, and the best animated movie of 2018</b></font>]]></string>
+
+    <string name="channel_title_test_0">Sony Picture • 4 months ago</string>
+    <string name="channel_title_test_1">Sony Picture • 4 months ago</string>
+    <string name="channel_title_test_2">Sony Picture • 4 months ago</string>
+    <string name="channel_title_test_3">Sony Picture • 4 months ago</string>
+    <string name="channel_title_test_4">Sony Picture • 4 months ago</string>
+    <string name="channel_title_test_5">Sony Picture • 4 months ago</string>
+    <string name="channel_title_test_6">Sony Picture • 4 months ago</string>
+    <string name="channel_title_test_7">Sony Picture • 4 months ago</string>
+    <string name="channel_title_test_8">Sony Picture • 4 months ago</string>
+    <string name="channel_title_test_9">Sony Picture • 4 months ago</string>
+
+    <string name="trending">Trending</string>
+
 </resources>

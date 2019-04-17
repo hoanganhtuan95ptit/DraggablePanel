@@ -1,4 +1,4 @@
-package com.hoanganhtuan95ptit.drag.view;
+package com.hoanganhtuan95ptit.drag.ui.widget.drag;
 
 import android.content.Context;
 import android.util.AttributeSet;

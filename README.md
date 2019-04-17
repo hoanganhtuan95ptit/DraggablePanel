@@ -12,7 +12,7 @@ This application is built based on my understanding of android, so it may not be
 
 ```java
 
-    <com.hoanganhtuan95ptit.drag.view.DragFrame
+    <com.hoanganhtuan95ptit.drag.ui.widget.drag.DragFrame
         android:id="@+id/drag_frame"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

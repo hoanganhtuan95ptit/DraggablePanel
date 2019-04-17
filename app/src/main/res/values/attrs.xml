@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="foo">
+        <attr name="textColorError" format="color" />
+    </declare-styleable>
+
+    <declare-styleable name="RoundView">
+        <attr name="rv_backgroundColor" format="color" />
+        <attr name="rv_backgroundPressColor" format="color" />
+        <attr name="rv_cornerRadius" format="dimension" />
+        <attr name="rv_cornerRadius_BL" format="dimension" />
+        <attr name="rv_cornerRadius_BR" format="dimension" />
+        <attr name="rv_cornerRadius_TL" format="dimension" />
+        <attr name="rv_cornerRadius_TR" format="dimension" />
+        <attr name="rv_isRadiusHalfHeight" format="boolean" />
+        <attr name="rv_isRippleEnable" format="boolean" />
+        <attr name="rv_isWidthHeightEqual" format="boolean" />
+        <attr name="rv_strokeColor" format="color" />
+        <attr name="rv_strokePressColor" format="color" />
+        <attr name="rv_strokeWidth" format="dimension" />
+        <attr name="rv_textPressColor" format="color" />
+    </declare-styleable>
+</resources>

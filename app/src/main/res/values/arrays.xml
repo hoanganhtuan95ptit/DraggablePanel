@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <integer-array name="video_title">
+        <item>@string/video_title_test_0</item>
+        <item>@string/video_title_test_1</item>
+        <item>@string/video_title_test_2</item>
+        <item>@string/video_title_test_3</item>
+        <item>@string/video_title_test_4</item>
+        <item>@string/video_title_test_5</item>
+        <item>@string/video_title_test_6</item>
+        <item>@string/video_title_test_7</item>
+        <item>@string/video_title_test_8</item>
+        <item>@string/video_title_test_9</item>
+    </integer-array>
+
+    <integer-array name="video_title_2">
+        <item>@string/video_title_2_test_0</item>
+        <item>@string/video_title_2_test_1</item>
+        <item>@string/video_title_2_test_2</item>
+        <item>@string/video_title_2_test_3</item>
+        <item>@string/video_title_2_test_4</item>
+        <item>@string/video_title_2_test_5</item>
+        <item>@string/video_title_2_test_6</item>
+        <item>@string/video_title_2_test_7</item>
+        <item>@string/video_title_2_test_8</item>
+        <item>@string/video_title_2_test_9</item>
+    </integer-array>
+
+    <integer-array name="video_thumb">
+        <item>@drawable/test_0</item>
+        <item>@drawable/test_1</item>
+        <item>@drawable/test_2</item>
+        <item>@drawable/test_3</item>
+        <item>@drawable/test_4</item>
+        <item>@drawable/test_5</item>
+        <item>@drawable/test_6</item>
+        <item>@drawable/test_7</item>
+        <item>@drawable/test_8</item>
+        <item>@drawable/test_9</item>
+    </integer-array>
+
+
+    <integer-array name="channel_title">
+        <item>@string/channel_title_test_0</item>
+        <item>@string/channel_title_test_1</item>
+        <item>@string/channel_title_test_2</item>
+        <item>@string/channel_title_test_3</item>
+        <item>@string/channel_title_test_4</item>
+        <item>@string/channel_title_test_5</item>
+        <item>@string/channel_title_test_6</item>
+        <item>@string/channel_title_test_7</item>
+        <item>@string/channel_title_test_8</item>
+        <item>@string/channel_title_test_9</item>
+    </integer-array>
+</resources>
