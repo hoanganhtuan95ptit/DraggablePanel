@@ -1,6 +1,5 @@
 package com.hoanganhtuan95ptit.drag.ui.activity;
 
-import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -9,15 +8,18 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.hoanganhtuan95ptit.drag.App;
 import com.hoanganhtuan95ptit.drag.R;
-import com.hoanganhtuan95ptit.drag.data.model.Channel;
 import com.hoanganhtuan95ptit.drag.data.model.Video;
+import com.hoanganhtuan95ptit.drag.mvp.home.HomeContact;
+import com.hoanganhtuan95ptit.drag.mvp.home.HomePresenterImpl;
+import com.hoanganhtuan95ptit.drag.mvp.trending.TrendingContact;
+import com.hoanganhtuan95ptit.drag.mvp.trending.TrendingPresenterImpl;
 import com.hoanganhtuan95ptit.drag.ui.adapter.BaseAdapter;
 import com.hoanganhtuan95ptit.drag.ui.adapter.HomeAdapter;
 import com.hoanganhtuan95ptit.drag.ui.fragment.DetailFragment;
 import com.hoanganhtuan95ptit.drag.ui.fragment.PlayFragment;
+import com.hoanganhtuan95ptit.drag.ui.widget.drag.DragFrame;
 import com.hoanganhtuan95ptit.drag.utils.Utils;
 import com.hoanganhtuan95ptit.drag.utils.images.ImageUtils;
-import com.hoanganhtuan95ptit.drag.ui.widget.drag.DragFrame;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -33,7 +35,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class MainActivity extends AppCompatActivity implements DragFrame.OnDragListener, SwipeRefreshLayout.OnRefreshListener {
+public class MainActivity extends AppCompatActivity implements DragFrame.OnDragListener, SwipeRefreshLayout.OnRefreshListener, HomeContact.HomeView, TrendingContact.TrendingView {
 
     @BindView(R.id.iv_avatar)
     ImageView ivAvatar;
@@ -55,9 +57,15 @@ public class MainActivity extends AppCompatActivity implements DragFrame.OnDragL
 
     private float ratio;
 
+    private HomeContact.HomePresenter homePresenter;
+    private TrendingContact.TrendingPresenter trendingPresenter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        homePresenter = new HomePresenterImpl(this, App.self().getApiHelper());
+        trendingPresenter = new TrendingPresenterImpl(this, App.self().getApiHelper());
+
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
@@ -93,16 +101,39 @@ public class MainActivity extends AppCompatActivity implements DragFrame.OnDragL
         play(video.getRatio());
     }
 
-
     @Override
     public void onStop() {
         super.onStop();
         EventBus.getDefault().unregister(this);
     }
 
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        homePresenter.dispose();
+        trendingPresenter.dispose();
+    }
+
     @Override
     public void onRefresh() {
         srHome.postDelayed(() -> srHome.setRefreshing(false), 1000);
+    }
+
+    @Override
+    public void bindTrendingVideo(ArrayList<Video> results) {
+        trending.addAll(results);
+        feeds.add(1, trending);
+        homeAdapter.bindData(feeds);
+        srHome.setRefreshing(false);
+    }
+
+    @Override
+    public void bindHomeVideo(ArrayList<Video> results) {
+        feeds.addAll(results);
+        feeds.add(BaseAdapter.END_TYPE);
+        homeAdapter.bindData(feeds);
+        trendingPresenter.getTrendingVideo();
     }
 
     @Override
@@ -138,49 +169,8 @@ public class MainActivity extends AppCompatActivity implements DragFrame.OnDragL
     }
 
     private void fetchData() {
-        TypedArray videoTitleArray = getResources().obtainTypedArray(R.array.video_title);
-        TypedArray videoThumbArray = getResources().obtainTypedArray(R.array.video_thumb);
-        TypedArray videoTitle2Array = getResources().obtainTypedArray(R.array.video_title_2);
-        TypedArray videoThumb2Array = getResources().obtainTypedArray(R.array.video_thumb);
-        TypedArray channelTitleArray = getResources().obtainTypedArray(R.array.channel_title);
-        TypedArray channelThumbArray = getResources().obtainTypedArray(R.array.video_thumb);
-
-        for (int i = 0; i < 10; i++) {
-            Channel channel = new Channel(String.valueOf(i), channelThumbArray.getResourceId(i, -1), channelTitleArray.getResourceId(i, -1));
-
-            Video video = new Video(String.valueOf(i), videoThumbArray.getResourceId(i, -1), videoTitleArray.getResourceId(i, -1));
-            video.setRatio(ratios[i % ratios.length]);
-            video.setChannel(channel);
-
-            feeds.add(video);
-        }
-
-        trending.add(BaseAdapter.SPACE_TYPE);
-        for (int i = 0; i < 6; i++) {
-            Channel channel = new Channel(String.valueOf(i), channelThumbArray.getResourceId(i, -1), channelTitleArray.getResourceId(i, -1));
-
-            Video video = new Video(String.valueOf(i), videoThumb2Array.getResourceId(i, -1), videoTitle2Array.getResourceId(i, -1));
-            video.setRatio(ratios[i % ratios.length]);
-            video.setChannel(channel);
-
-            trending.add(video);
-        }
-        trending.add(BaseAdapter.SPACE_TYPE);
-
-        videoTitleArray.recycle();
-        videoThumbArray.recycle();
-        videoTitle2Array.recycle();
-        videoThumb2Array.recycle();
-        channelTitleArray.recycle();
-        channelThumbArray.recycle();
-
-        feeds.add(1, trending);
-        feeds.add(BaseAdapter.END_TYPE);
-        homeAdapter.bindData(feeds);
-
-        srHome.setRefreshing(false);
+        homePresenter.getHomeVideo();
     }
-
 
     public void play(float r) {
         ratio = r;

@@ -2,6 +2,8 @@ package com.hoanganhtuan95ptit.drag;
 
 import android.app.Application;
 
+import com.hoanganhtuan95ptit.drag.data.network.ApiHelper;
+import com.hoanganhtuan95ptit.drag.data.network.AppApiHelper;
 import com.hoanganhtuan95ptit.drag.utils.Utils;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
@@ -12,6 +14,8 @@ public class App extends Application implements Constants {
     public static App self() {
         return self;
     }
+
+    private ApiHelper apiHelper;
 
     private int marginThree;
     private int padding;
@@ -28,10 +32,16 @@ public class App extends Application implements Constants {
                 .setFontAttrId(R.attr.fontPath)
                 .build());
 
+        apiHelper = new AppApiHelper();
+
         marginThree = (int) Utils.dp2px(4);
         padding = (int) Utils.dp2px(16);
         margin = (int) Utils.dp2px(8);
         round = margin;
+    }
+
+    public ApiHelper getApiHelper() {
+        return apiHelper;
     }
 
     public int getMarginThree() {

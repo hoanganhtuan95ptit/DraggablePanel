@@ -10,6 +10,8 @@ import com.hoanganhtuan95ptit.drag.App;
 import com.hoanganhtuan95ptit.drag.R;
 import com.hoanganhtuan95ptit.drag.data.model.Channel;
 import com.hoanganhtuan95ptit.drag.data.model.Video;
+import com.hoanganhtuan95ptit.drag.mvp.relation.RelationContact;
+import com.hoanganhtuan95ptit.drag.mvp.relation.RelationPresenterImpl;
 import com.hoanganhtuan95ptit.drag.ui.adapter.BaseAdapter;
 import com.hoanganhtuan95ptit.drag.ui.adapter.DetailAdapter;
 
@@ -24,16 +26,19 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 import static com.hoanganhtuan95ptit.drag.ui.activity.MainActivity.ratios;
 
-public class DetailFragment extends Fragment {
+public class DetailFragment extends Fragment implements RelationContact.RelationView, SwipeRefreshLayout.OnRefreshListener {
 
     @BindView(R.id.rv_detail)
     RecyclerView rvDetail;
+    @BindView(R.id.sr_detail)
+    SwipeRefreshLayout srDetail;
 
     public static DetailFragment newInstance() {
 
@@ -44,10 +49,19 @@ public class DetailFragment extends Fragment {
         return fragment;
     }
 
+    private Video currentVideo;
     private ArrayList<Object> feeds;
     private DetailAdapter detailAdapter;
 
+    private RelationContact.RelationPresenter relationPresenter;
+
     Unbinder unbinder;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        relationPresenter = new RelationPresenterImpl(this, App.self().getApiHelper());
+    }
 
     @Nullable
     @Override
@@ -60,6 +74,8 @@ public class DetailFragment extends Fragment {
 
         rvDetail.setLayoutManager(new LinearLayoutManager(App.self().getApplicationContext()));
         rvDetail.setAdapter(detailAdapter);
+
+        srDetail.setOnRefreshListener(this);
         return view;
     }
 
@@ -69,37 +85,32 @@ public class DetailFragment extends Fragment {
         EventBus.getDefault().register(this);
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onVideoEvent(Video video) {
-        TypedArray videoTitleArray = getResources().obtainTypedArray(R.array.video_title);
-        TypedArray videoThumbArray = getResources().obtainTypedArray(R.array.video_thumb);
-        TypedArray videoTitle2Array = getResources().obtainTypedArray(R.array.video_title_2);
-        TypedArray videoThumb2Array = getResources().obtainTypedArray(R.array.video_thumb);
-        TypedArray channelTitleArray = getResources().obtainTypedArray(R.array.channel_title);
-        TypedArray channelThumbArray = getResources().obtainTypedArray(R.array.video_thumb);
-        feeds.clear();
-        feeds.add(video);
-        for (int i = 0; i < 10; i++) {
-            Channel channel = new Channel(String.valueOf(i), channelThumbArray.getResourceId(i, -1), channelTitleArray.getResourceId(i, -1));
-
-            Video item = new Video(String.valueOf(i), videoThumbArray.getResourceId(i, -1), videoTitleArray.getResourceId(i, -1));
-            video.setRatio(ratios[i % ratios.length]);
-            video.setChannel(channel);
-
-            feeds.add(item);
-        }
-        feeds.add(BaseAdapter.END_TYPE);
-        videoTitleArray.recycle();
-        videoThumbArray.recycle();
-        videoTitle2Array.recycle();
-        videoThumb2Array.recycle();
-        channelTitleArray.recycle();
-        channelThumbArray.recycle();
-
-        detailAdapter.bindData(feeds);
-        rvDetail.scrollToPosition(0);
+    @Override
+    public void onRefresh() {
+        fetchRelation();
     }
 
+    @Override
+    public void bindRelationVideo(ArrayList<Video> results) {
+
+        feeds.clear();
+        feeds.add(currentVideo);
+        feeds.addAll(results);
+        detailAdapter.bindData(feeds);
+
+        srDetail.setRefreshing(false);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onVideoEvent(Video video) {
+        currentVideo = video;
+        srDetail.setRefreshing(true);
+        fetchRelation();
+    }
+
+    private void fetchRelation() {
+        relationPresenter.getRelationVideo();
+    }
 
     @Override
     public void onStop() {
@@ -110,6 +121,7 @@ public class DetailFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        relationPresenter.dispose();
         unbinder.unbind();
     }
 }
