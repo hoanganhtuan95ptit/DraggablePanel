@@ -9,6 +9,23 @@ This application is built based on my understanding of android, so it may not be
 --- | --- | --- 
 ![Alt text](output/Screenshot_20190417-173732.png) | ![Alt text](output/Screenshot_20190417-173744.png)  | ![Alt text](output/Screenshot_20190417-173721.png) 
 
+#### Download
+
+```java
+        allprojects {
+		repositories {
+			...
+			maven { url 'https://jitpack.io' }
+		}
+	}
+    
+    
+        dependencies {
+	        implementation 'com.github.hoanganhtuan95ptit:Drag---TubeAnimationV2:1.0.0'
+	}
+
+```
+
 #### XML
 
 ```java
