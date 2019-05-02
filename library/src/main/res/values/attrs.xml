@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="DragFrame">
+        <attr name="df_paddingBottom" format="dimension" />
+        <attr name="df_paddingEdge" format="dimension" />
+        <attr name="df_ratio" format="dimension" />
+    </declare-styleable>
+</resources>

@@ -26,7 +26,7 @@
                     android:layout_marginTop="?attr/actionBarSize"
                     android:background="@color/colorPrimary">
 
-                    <com.hoanganhtuan95ptit.drag.ui.widget.round.RoundLinearLayout
+                    <com.hoanganhtuan95ptit.example.ui.widget.round.RoundLinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="45dp"
                         android:layout_gravity="center"
@@ -36,7 +36,7 @@
                         app:rv_backgroundColor="#E4E4E4"
                         app:rv_cornerRadius="300dp">
 
-                        <com.hoanganhtuan95ptit.drag.ui.widget.round.RoundTextView
+                        <com.hoanganhtuan95ptit.example.ui.widget.round.RoundTextView
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
                             android:layout_margin="4dp"
@@ -49,7 +49,7 @@
                             app:rv_backgroundColor="#FFFFFF"
                             app:rv_cornerRadius="300dp" />
 
-                        <com.hoanganhtuan95ptit.drag.ui.widget.round.RoundTextView
+                        <com.hoanganhtuan95ptit.example.ui.widget.round.RoundTextView
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
                             android:layout_margin="4dp"
@@ -60,7 +60,7 @@
                             android:textSize="@dimen/text_size"
                             android:textStyle="bold" />
 
-                        <com.hoanganhtuan95ptit.drag.ui.widget.round.RoundTextView
+                        <com.hoanganhtuan95ptit.example.ui.widget.round.RoundTextView
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
                             android:layout_margin="4dp"
@@ -70,7 +70,7 @@
                             android:textColor="#5b5b5b"
                             android:textSize="@dimen/text_size"
                             android:textStyle="bold" />
-                    </com.hoanganhtuan95ptit.drag.ui.widget.round.RoundLinearLayout>
+                    </com.hoanganhtuan95ptit.example.ui.widget.round.RoundLinearLayout>
                 </FrameLayout>
 
                 <androidx.appcompat.widget.Toolbar
@@ -186,7 +186,7 @@
         android:alpha="0"
         android:background="#000000" />
 
-    <com.hoanganhtuan95ptit.drag.ui.widget.drag.DragFrame
+    <com.hoanganhtuan95ptit.drag.DragFrame
         android:id="@+id/drag_frame"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
