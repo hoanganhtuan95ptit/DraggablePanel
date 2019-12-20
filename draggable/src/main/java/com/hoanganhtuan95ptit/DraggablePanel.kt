@@ -10,11 +10,13 @@ import androidx.dynamicanimation.animation.FloatValueHolder
 import androidx.dynamicanimation.animation.SpringAnimation
 import androidx.dynamicanimation.animation.SpringForce
 import com.google.android.material.appbar.AppBarLayout
+import com.hoanganhtuan95ptit.utils.resize
 import com.hoanganhtuan95ptit.utils.toPx
 import com.hoanganhtuan95ptit.widget.DragBehavior
 import com.hoanganhtuan95ptit.widget.DragFrame
 import kotlinx.android.synthetic.main.layout_draggable_panel.view.*
 import kotlin.math.abs
+import kotlin.math.min
 
 
 class DraggablePanel @JvmOverloads constructor(
@@ -22,9 +24,6 @@ class DraggablePanel @JvmOverloads constructor(
 ) : RelativeLayout(context, attrs, defStyleAttr) {
 
     companion object {
-
-        private const val PERCENT_START_CHANGE_WIDTH = 0.9f
-        private const val PERCENT_END_CHANGE_ALPHA = 0.7f
 
         private var scaledTouchSlop = 0
 
@@ -48,53 +47,31 @@ class DraggablePanel @JvmOverloads constructor(
         }
     }
 
-//    private lateinit var dragBehavior: DragBehavior
-//
-    private var velocityTracker: VelocityTracker? = null
+    private var verticalOffsetOld = 0
+
     private var velocityY = 0f
-//
-//    private val expand = false
-//
-//    private val heightMinDefault = 0
-//    private val heightMaxDefault = 0
-//
-//    private var heightMedNormal = 0
-//    private var heightWaiting = 0
-//
-//    private var currentPercent = -1f
-//
-//    private var edge = 0
-//    //    private var bottom = 0
-//    private var radius = 0
-//
-//    private var ratio: Float = 16f / 9
-//
-//    private var topNew = 0
-//    private var topMax = 0
-//    private var topMin = 0
-//
-//    private var widthMax = 0
-//    private var heightMax = 0
-//
-//    private var widthMin = 0
-//    private var heightMin = 0
-//
-//    private var widthMed = 0
-//    private var heightMed = 0
+    private var velocityTracker: VelocityTracker? = null
+
+    private var mPercentCurrent = -1f
+
+    private var mMarginTopMin = 0
+    private var mMarginTopCurrent = -1
+
+    private var mMarginEdgMin = 8.toPx()
+    private var mMarginBottomMin = 8.toPx()
+
+    private var mHeightMaxDefault = 200.toPx()
+    private var mHeightMax = 350.toPx()
+    private var mHeightMin = 80.toPx()
 
     init {
         inflate(context, R.layout.layout_draggable_panel, this)
 
-//        appbarLayout.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { _, verticalOffset ->
-//            val i = abs(verticalOffset)
-//            if (currentPercent == 0f && i > 0) {
-//                heightMin = heightMinDefault + i
-//                heightMed = (measuredHeight - PERCENT_START_CHANGE_WIDTH * bottom - PERCENT_START_CHANGE_WIDTH * (topMin - topMax) - topMax).toInt() + i
-//            } else if (currentPercent == 0f) {
-//                heightMin = heightMinDefault
-//                heightMed = (measuredHeight - PERCENT_START_CHANGE_WIDTH * bottom - PERCENT_START_CHANGE_WIDTH * (topMin - topMax) - topMax).toInt()
-//            }
-//        })
+        appbarLayout.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { _, verticalOffset ->
+            val delta = verticalOffset - verticalOffsetOld
+            verticalOffsetOld = verticalOffset
+            mHeightMin -= delta
+        })
 
         frameDrag.onTouchListener = object : DragFrame.OnTouchListener {
 
@@ -134,12 +111,13 @@ class DraggablePanel @JvmOverloads constructor(
                 when (ev.action) {
                     MotionEvent.ACTION_DOWN -> {
                         firstViewDown = isViewUnder(frameFirst, ev)
+                        println("onTouchEvent" + firstViewDown)
                         deltaY = motionY - (frameDrag.layoutParams as LayoutParams).topMargin
                     }
                     MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
                         scrolling = false
                         firstViewDown = false
-//                        handleUp()
+                        handleUp()
                     }
                     MotionEvent.ACTION_MOVE -> {
                         handleMove(motionY)
@@ -148,65 +126,52 @@ class DraggablePanel @JvmOverloads constructor(
                 return firstViewDown
             }
 
-//            private fun handleUp() {
-//                topNew = (frameDrag.layoutParams as LayoutParams).topMargin
-//
-//                val topMarginFinal: Int = if (abs(velocityY) < 200) {
-//                    if (topNew - topMax > topMin - topNew) topMin else topMax
-//                } else {
-//                    if (velocityY < 0) topMax else topMin
-//                }
-//
-//                velocityY.springAnimation(topMax.toFloat(), topMin.toFloat(), topNew.toFloat(), topMarginFinal.toFloat(), { setPercent(getPercent(it.toInt())) }, {
-//                    // todo
-//                })
-//            }
+            private fun handleUp() {
+                val finalPosition = if (abs(velocityY) < 200) {
+                    if (mMarginTopCurrent > mMarginTopMin - mMarginTopCurrent) mMarginTopMin else 0
+                } else {
+                    if (velocityY < 0) 0 else mMarginTopMin
+                }
+
+                val springX = SpringForce(finalPosition.toFloat())
+                springX.dampingRatio = 0.7f
+                springX.stiffness = 300f
+
+                val springAnimation = SpringAnimation(FloatValueHolder())
+                springAnimation.setStartVelocity(velocityY)
+                        .setMinValue(0.toFloat())
+                        .setMaxValue(mMarginTopMin.toFloat())
+                        .setStartValue(mMarginTopCurrent.toFloat())
+                        .setSpring(springX)
+                        .setMinimumVisibleChange(DynamicAnimation.MIN_VISIBLE_CHANGE_PIXELS)
+                        .addUpdateListener { dynamicAnimation: DynamicAnimation<*>, value: Float, _: Float ->
+                            setMarginTop(value.toInt())
+                            if (value == finalPosition.toFloat()) dynamicAnimation.cancel()
+                        }
+                        .addEndListener { _: DynamicAnimation<*>?, b: Boolean, _: Float, _: Float ->
+                        }
+                        .start()
+            }
 
             private fun handleMove(motionY: Int) {
                 setMarginTop(motionY - deltaY)
-//                println("handleMove: " + motionY + "   " + deltaY)
-//                setPercent(getPercent())
             }
-//
-//            private fun getPercent(top: Int): Float {
-//
-//                var percent = (topNew - topMax) * 1f / (topMin - topMax)
-//                percent = abs(percent)
-//
-//                println("getPercent: " + topNew + "   " + percent)
-//                return percent
-//            }
+
         }
 
-    }
+        viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
+            override fun onGlobalLayout() {
+                viewTreeObserver.removeOnGlobalLayoutListener(this)
 
-    override fun onFinishInflate() {
-        super.onFinishInflate()
-//        viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
-//            override fun onGlobalLayout() {
-//                viewTreeObserver.removeOnGlobalLayoutListener(this)
-//
-//                dragBehavior = DragBehavior()
-//                val params = frameFirst.layoutParams as CoordinatorLayout.LayoutParams
-//                params.behavior = dragBehavior
-//
-//                widthMax = width
-//                heightMax = (widthMax / ratio).toInt()
-//
-//                heightMin = 80.toPx()
-//                widthMin = heightMin * 22 / 9
-//
-//                topMax = 0
-//                topNew = topMax
-//                topMin = height - heightMin - bottom
-//
-//                heightMed = (height - PERCENT_START_CHANGE_WIDTH * bottom - PERCENT_START_CHANGE_WIDTH * (topMin - topMax) - topMax).toInt()
-//                widthMed = (width - PERCENT_START_CHANGE_WIDTH * edge).toInt()
-//                heightMedNormal = heightMed
-//
-//                setPercent(0f)
-//            }
-//        })
+                val params = frameFirst.layoutParams as CoordinatorLayout.LayoutParams
+                params.behavior = DragBehavior()
+                frameFirst.layoutParams = params
+
+                mMarginTopMin = height - mHeightMin - mMarginBottomMin
+
+                setMarginTop(0)
+            }
+        })
     }
 
     override fun onInterceptTouchEvent(ev: MotionEvent): Boolean {
@@ -239,54 +204,34 @@ class DraggablePanel @JvmOverloads constructor(
     }
 
     private fun setMarginTop(top: Int) {
-//        topNew = top
-//        if (topNew < topMax) topNew = topMax else if (topNew > topMin) topNew = topMin
+        val marginTop = when {
+            top < 0 -> 0
+            top > mMarginTopMin -> mMarginTopMin
+            else -> top
+        }
 
-        val layoutParams = frameDrag.layoutParams as LayoutParams
-        layoutParams.topMargin = top
-        frameDrag.layoutParams = layoutParams
+        if (marginTop == mMarginTopCurrent) return
+        mMarginTopCurrent = marginTop
+
+        val percent: Float = mMarginTopCurrent * 1f / mMarginTopMin
+        setPercent(percent)
     }
 
-//    private fun setPercent(percent: Float) {
-//        if (currentPercent == percent || percent > 1 || percent < 0) return
-//        currentPercent = percent
-//
-//        println(currentPercent)
-//
-//        val height = if (currentPercent < PERCENT_START_CHANGE_WIDTH) {
-//            (heightMax - (heightMax - heightMed) * currentPercent / PERCENT_START_CHANGE_WIDTH).toInt()
-//        } else {
-//            (heightMed - (heightMed - heightMin) * (currentPercent - PERCENT_START_CHANGE_WIDTH) / (1 - PERCENT_START_CHANGE_WIDTH)).toInt()
-//        }
-//
-//
-//        toolbar.resize(-1, height)
-//        frameFirst.resize(-1, height)
-//        appbarLayout.resize(-1, height)
-//    }
-//
-//    private fun refreshLayoutFirstView(height: Int) {
-//    }
-//
-//    private fun springAnimation(velocityY: Float, minValue: Int, maxValue: Int, startValue: Int, finalPosition: Int,
-//                                onUpdate: (Float) -> Unit,
-//                                onEnd: () -> Unit) {
-//        val springX = SpringForce(finalPosition.toFloat())
-//        springX.dampingRatio = 0.7f
-//        springX.stiffness = 300f
-//        val springAnimation = SpringAnimation(FloatValueHolder())
-//        springAnimation.setStartVelocity(velocityY)
-//                .setMinValue(minValue.toFloat())
-//                .setMaxValue(maxValue.toFloat())
-//                .setStartValue(startValue.toFloat())
-//                .setSpring(springX)
-//                .setMinimumVisibleChange(DynamicAnimation.MIN_VISIBLE_CHANGE_PIXELS)
-//                .addUpdateListener { _: DynamicAnimation<*>?, value: Float, _: Float ->
-//                    onUpdate(value)
-//                }
-//                .addEndListener { _: DynamicAnimation<*>?, _: Boolean, _: Float, _: Float ->
-//                    onEnd()
-//                }
-//                .start()
-//    }
+    private fun setPercent(percent: Float) {
+        if (mPercentCurrent == percent || percent > 1 || percent < 0) return
+        mPercentCurrent = percent
+
+        val layoutParams = frameDrag.layoutParams as LayoutParams
+        layoutParams.topMargin = (mMarginTopMin * mPercentCurrent).toInt()
+        layoutParams.leftMargin = (mMarginEdgMin * mPercentCurrent).toInt()
+        layoutParams.rightMargin = (mMarginEdgMin * mPercentCurrent).toInt()
+        layoutParams.bottomMargin = (mMarginBottomMin * mPercentCurrent).toInt()
+        frameDrag.layoutParams = layoutParams
+
+        val height = (mHeightMax - (mHeightMax - mHeightMin) * mPercentCurrent).toInt()
+
+        appbarLayout.resize(-1, height)
+        toolbar.resize(-1, min(mHeightMaxDefault, (mHeightMaxDefault - (mHeightMaxDefault - mHeightMin) * mPercentCurrent).toInt()))
+    }
+
 }

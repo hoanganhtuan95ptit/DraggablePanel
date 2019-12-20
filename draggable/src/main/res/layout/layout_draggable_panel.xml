@@ -5,56 +5,58 @@
     <com.hoanganhtuan95ptit.widget.DragFrame
         android:id="@+id/frameDrag"
         android:layout_width="match_parent"
-        android:background="#000000"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="#000000">
 
-<!--        <com.google.android.material.appbar.AppBarLayout-->
-<!--            android:id="@+id/appbarLayout"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            app:elevation="0dp">-->
+        <com.hoanganhtuan95ptit.widget.DragAppbarLayout
+            android:id="@+id/appbarLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:elevation="0dp">
 
-<!--            <com.google.android.material.appbar.CollapsingToolbarLayout-->
-<!--                android:id="@+id/collapsingToolbarLayout"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="match_parent"-->
-<!--                app:layout_scrollFlags="scroll|exitUntilCollapsed">-->
+            <com.google.android.material.appbar.CollapsingToolbarLayout
+                android:id="@+id/collapsingToolbarLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
-<!--                <androidx.appcompat.widget.Toolbar-->
-<!--                    android:id="@+id/toolbar"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="match_parent"-->
-<!--                    android:background="@android:color/white"-->
-<!--                    app:layout_collapseMode="pin" />-->
-<!--            </com.google.android.material.appbar.CollapsingToolbarLayout>-->
-<!--        </com.google.android.material.appbar.AppBarLayout>-->
+                <androidx.appcompat.widget.Toolbar
+                    android:id="@+id/toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@android:color/white"
+                    app:layout_collapseMode="pin" />
+            </com.google.android.material.appbar.CollapsingToolbarLayout>
+        </com.hoanganhtuan95ptit.widget.DragAppbarLayout>
 
-<!--        <RelativeLayout-->
-<!--            android:id="@+id/frameSecond"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="match_parent"-->
-<!--            app:layout_behavior="@string/appbar_scrolling_view_behavior">-->
+        <RelativeLayout
+            android:id="@+id/frameSecond"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/dra"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-<!--            <androidx.core.widget.NestedScrollView-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="match_parent">-->
+            <androidx.core.widget.NestedScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
-<!--                <LinearLayout-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="5000dp" />-->
-<!--            </androidx.core.widget.NestedScrollView>-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="5000dp" />
+            </androidx.core.widget.NestedScrollView>
 
-<!--            <View-->
-<!--                android:id="@+id/vAlpha"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="match_parent"-->
-<!--                android:alpha="0" />-->
-<!--        </RelativeLayout>-->
+            <View
+                android:id="@+id/vAlpha"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:alpha="0" />
+        </RelativeLayout>
 
         <FrameLayout
             android:id="@+id/frameFirst"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:background="#000">
 
             <ImageView
                 android:layout_width="match_parent"
