@@ -14,7 +14,6 @@ class DragAppbarLayout @JvmOverloads constructor(
     init {
         addOnOffsetChangedListener(OnOffsetChangedListener { _, verticalOffset ->
             offset = verticalOffset
-            println(offset)
         })
     }
 }

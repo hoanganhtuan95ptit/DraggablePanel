@@ -6,12 +6,13 @@
         android:id="@+id/frameDrag"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#000000">
+        android:background="#e1e1e1">
 
         <com.hoanganhtuan95ptit.widget.DragAppbarLayout
             android:id="@+id/appbarLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@android:color/white"
             app:elevation="0dp">
 
             <com.google.android.material.appbar.CollapsingToolbarLayout
@@ -24,7 +25,6 @@
                     android:id="@+id/toolbar"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@android:color/white"
                     app:layout_collapseMode="pin" />
             </com.google.android.material.appbar.CollapsingToolbarLayout>
         </com.hoanganhtuan95ptit.widget.DragAppbarLayout>
@@ -45,23 +45,19 @@
                     android:layout_height="5000dp" />
             </androidx.core.widget.NestedScrollView>
 
-            <View
-                android:id="@+id/vAlpha"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:alpha="0" />
         </RelativeLayout>
 
         <FrameLayout
             android:id="@+id/frameFirst"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="#000">
+            android:layout_height="match_parent">
 
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:src="@drawable/test_0" />
+                android:src="@drawable/test_0"
+                android:scaleType="centerCrop"
+                android:alpha="0.5"/>
         </FrameLayout>
     </com.hoanganhtuan95ptit.widget.DragFrame>
 </merge>

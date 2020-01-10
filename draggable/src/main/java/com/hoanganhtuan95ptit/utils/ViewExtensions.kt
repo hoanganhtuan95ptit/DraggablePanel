@@ -215,9 +215,17 @@ fun View.marginAnimation(
 }
 
 fun View.resize(width: Int, height: Int) {
-    if (width >= 0) layoutParams.width = width
-    if (height >= 0) layoutParams.height = height
-    layoutParams = layoutParams
+    var newWidth = layoutParams.width
+    var newHeight = layoutParams.height
+
+    if (width >= 0) newWidth = width
+    if (height >= 0) newHeight = height
+
+    if (newWidth != layoutParams.width || newHeight != layoutParams.height) {
+        layoutParams.width = width
+        layoutParams.height = height
+        layoutParams = layoutParams
+    }
 }
 
 fun ViewGroup.inflate(@LayoutRes l: Int): View {
