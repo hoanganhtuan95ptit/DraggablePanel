@@ -2,13 +2,13 @@
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <com.hoanganhtuan95ptit.widget.DragFrame
+    <com.hoanganhtuan95ptit.draggable.widget.DragFrame
         android:id="@+id/frameDrag"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#e1e1e1">
 
-        <com.hoanganhtuan95ptit.widget.DragAppbarLayout
+        <com.hoanganhtuan95ptit.draggable.widget.DragAppbarLayout
             android:id="@+id/appbarLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -27,37 +27,17 @@
                     android:layout_height="match_parent"
                     app:layout_collapseMode="pin" />
             </com.google.android.material.appbar.CollapsingToolbarLayout>
-        </com.hoanganhtuan95ptit.widget.DragAppbarLayout>
+        </com.hoanganhtuan95ptit.draggable.widget.DragAppbarLayout>
 
-        <RelativeLayout
+        <FrameLayout
             android:id="@+id/frameSecond"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/dra"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-            <androidx.core.widget.NestedScrollView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="5000dp" />
-            </androidx.core.widget.NestedScrollView>
-
-        </RelativeLayout>
+            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
         <FrameLayout
             android:id="@+id/frameFirst"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:src="@drawable/test_0"
-                android:scaleType="centerCrop"
-                android:alpha="0.5"/>
-        </FrameLayout>
-    </com.hoanganhtuan95ptit.widget.DragFrame>
+            android:layout_height="match_parent" />
+    </com.hoanganhtuan95ptit.draggable.widget.DragFrame>
 </merge>

@@ -2,14 +2,14 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/App-Drag---TubeAnimationV2.iml" filepath="$PROJECT_DIR$/App-Drag---TubeAnimationV2.iml" />
       <module fileurl="file://$PROJECT_DIR$/Drag---TubeAnimationV2.iml" filepath="$PROJECT_DIR$/Drag---TubeAnimationV2.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/Drag---TubeAnimationV2-app.iml" filepath="$PROJECT_DIR$/app/Drag---TubeAnimationV2-app.iml" />
       <module fileurl="file://$PROJECT_DIR$/draggable/Drag---TubeAnimationV2-draggable.iml" filepath="$PROJECT_DIR$/draggable/Drag---TubeAnimationV2-draggable.iml" />
       <module fileurl="file://$PROJECT_DIR$/library/Drag---TubeAnimationV2-library.iml" filepath="$PROJECT_DIR$/library/Drag---TubeAnimationV2-library.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/DraggablePanelV2.iml" filepath="$PROJECT_DIR$/.idea/DraggablePanelV2.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/draggable/draggable.iml" filepath="$PROJECT_DIR$/draggable/draggable.iml" />
-      <module fileurl="file://$PROJECT_DIR$/library/library.iml" filepath="$PROJECT_DIR$/library/library.iml" />
+      <module fileurl="file://$PROJECT_DIR$/example/example.iml" filepath="$PROJECT_DIR$/example/example.iml" />
     </modules>
   </component>
 </project>

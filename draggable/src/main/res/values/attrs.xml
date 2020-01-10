@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <declare-styleable name="DraggablePanel">
+    <declare-styleable name="DraggablePanel" >
         <attr name="height_when_max" format="dimension" />
 
         <attr name="percent_when_middle" format="float" />
