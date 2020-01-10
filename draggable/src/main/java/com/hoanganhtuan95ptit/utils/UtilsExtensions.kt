@@ -9,6 +9,8 @@ import androidx.dynamicanimation.animation.DynamicAnimation
 import androidx.dynamicanimation.animation.FloatValueHolder
 import androidx.dynamicanimation.animation.SpringAnimation
 import androidx.dynamicanimation.animation.SpringForce
+import io.reactivex.Completable
+import io.reactivex.subjects.CompletableSubject
 
 fun Float.springAnimation(minValue: Float,
                           maxValue: Float,
@@ -65,7 +67,6 @@ fun Array<ValuesHolder?>.animation(
     animator.addUpdateListener {
         val keyData = HashMap<String, Any>()
         val currentData = ArrayList<Any>()
-
 
         for (key in keys) {
             val data = it.getAnimatedValue(key)
@@ -136,4 +137,26 @@ fun Float.toPx(): Int {
             this,
             Resources.getSystem().displayMetrics
     ).toInt()
+}
+
+fun Float.springYAnim(minValue: Float, maxValue: Float, startValue: Float, velocityY: Float, onUpdate: (DynamicAnimation<*>, Float) -> Unit, onEnd:()->Unit) {
+    val springX = SpringForce(this)
+    springX.dampingRatio = 0.7f
+    springX.stiffness = 300f
+
+    val springAnimation = SpringAnimation(FloatValueHolder())
+    springAnimation.setStartVelocity(velocityY)
+            .setMinValue(minValue)
+            .setMaxValue(maxValue)
+            .setStartValue(startValue)
+            .setSpring(springX)
+            .setMinimumVisibleChange(DynamicAnimation.MIN_VISIBLE_CHANGE_PIXELS)
+            .addUpdateListener { dynamicAnimation: DynamicAnimation<*>, value: Float, _: Float ->
+                onUpdate(dynamicAnimation, value)
+                if (value == this) dynamicAnimation.cancel()
+            }
+            .addEndListener { _: DynamicAnimation<*>?, b: Boolean, _: Float, _: Float ->
+                onEnd()
+            }
+            .start()
 }

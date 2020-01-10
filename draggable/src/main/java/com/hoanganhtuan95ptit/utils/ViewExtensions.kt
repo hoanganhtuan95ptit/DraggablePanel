@@ -214,6 +214,24 @@ fun View.marginAnimation(
     })
 }
 
+fun View.translationYAnim(
+        value: Float,
+        duration: Long,
+        onEnd: () -> Unit
+) {
+    val pointList = ArrayList<ValuesHolder>()
+    pointList.add(ValuesHolder("translationY", translationY, value))
+    pointList.animation(duration, { keyData, valueAnimator ->
+        translationY = keyData.get("translationY") as Float
+    }, {
+        onEnd()
+    })
+}
+
+fun View.reHeight(height: Int) {
+    resize(-1, height)
+}
+
 fun View.resize(width: Int, height: Int) {
     var newWidth = layoutParams.width
     var newHeight = layoutParams.height
