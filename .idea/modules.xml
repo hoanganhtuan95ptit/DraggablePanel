@@ -7,6 +7,9 @@
       <module fileurl="file://$PROJECT_DIR$/app/Drag---TubeAnimationV2-app.iml" filepath="$PROJECT_DIR$/app/Drag---TubeAnimationV2-app.iml" />
       <module fileurl="file://$PROJECT_DIR$/draggable/Drag---TubeAnimationV2-draggable.iml" filepath="$PROJECT_DIR$/draggable/Drag---TubeAnimationV2-draggable.iml" />
       <module fileurl="file://$PROJECT_DIR$/library/Drag---TubeAnimationV2-library.iml" filepath="$PROJECT_DIR$/library/Drag---TubeAnimationV2-library.iml" />
+      <module fileurl="file://$PROJECT_DIR$/DraggablePanel.iml" filepath="$PROJECT_DIR$/DraggablePanel.iml" />
+      <module fileurl="file://$PROJECT_DIR$/draggable/DraggablePanel-draggable.iml" filepath="$PROJECT_DIR$/draggable/DraggablePanel-draggable.iml" />
+      <module fileurl="file://$PROJECT_DIR$/example/DraggablePanel-example.iml" filepath="$PROJECT_DIR$/example/DraggablePanel-example.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/DraggablePanelV2.iml" filepath="$PROJECT_DIR$/.idea/DraggablePanelV2.iml" />
       <module fileurl="file://$PROJECT_DIR$/draggable/draggable.iml" filepath="$PROJECT_DIR$/draggable/draggable.iml" />
       <module fileurl="file://$PROJECT_DIR$/example/example.iml" filepath="$PROJECT_DIR$/example/example.iml" />
