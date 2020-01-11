@@ -31,20 +31,21 @@ This application is built based on my understanding of android, so it may not be
 *Xml
 
 ```java
-<com.hoanganhtuan95ptit.draggable.DraggablePanel
-        android:id="@+id/draggablePanel"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:height_when_max="300dp"
-        app:height_when_min="80dp"
-        app:margin_bottom_when_min="8dp"
-        app:margin_edge_when_min="8dp"
-        app:percent_when_middle="0.9"
-        app:state="MIN" />
+        <com.hoanganhtuan95ptit.draggable.DraggablePanel
+                android:id="@+id/draggablePanel"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:height_when_max="300dp"
+                app:height_when_min="80dp"
+                app:margin_bottom_when_min="8dp"
+                app:margin_edge_when_min="8dp"
+                app:percent_when_middle="0.9"
+                app:state="MIN" />
 ```
 ![Alt text](output/height_when_max.png) | ![Alt text](output/height_when_min.png)
+--- | --- 
 
-*Listener
+* Listener
 
 ```java
 
@@ -59,14 +60,14 @@ This application is built based on my understanding of android, so it may not be
         })
 ```
 
-*Add frame
+* Add frame
 ```java
         supportFragmentManager.beginTransaction().add(R.id.frameFirst, TopFragment()).commit() // add frame top
         supportFragmentManager.beginTransaction().add(R.id.frameSecond, BottomFragment()).commit() // add frame bottom
 ```
 ![Alt text](output/addFrame.png)
 
-*Action
+* Action
 ```java
         btnMax.setOnClickListener { draggablePanel.maximize() }// maximize
         btnMin.setOnClickListener { draggablePanel.minimize() }//minimizeo
@@ -76,62 +77,62 @@ This application is built based on my understanding of android, so it may not be
 
 #### Custom [Detail code java](https://github.com/hoanganhtuan95ptit/DraggablePanel/blob/master/example/src/main/java/com/hoanganhtuan95ptit/example/CustomActivity.kt)
 
-*Custom
+* Custom
 ```java
-class DraggableSource @JvmOverloads constructor(
-        context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
-) : DraggablePanel(context, attrs, defStyleAttr) {
-
-    var mWidthWhenMax = 0
-
-    var mWidthWhenMiddle = 0
-
-    var mWidthWhenMin = 0
-
-    init {
-        getFrameFirst().addView(inflate(R.layout.layout_top))
-        getFrameSecond().addView(inflate(R.layout.layout_bottom))
-    }
-
-    override fun initFrame() {
-        mWidthWhenMax = width
-
-        mWidthWhenMiddle = (width - mPercentWhenMiddle * mMarginEdgeWhenMin).toInt()
-
-        mWidthWhenMin = mHeightWhenMin * 22 / 9
-
-        super.initFrame()
-    }
-
-    override fun refreshFrameFirst() {
-        super.refreshFrameFirst()
-
-        val width = if (mCurrentPercent < mPercentWhenMiddle) {
-            (mWidthWhenMax - (mWidthWhenMax - mWidthWhenMiddle) * mCurrentPercent)
-        } else {
-            (mWidthWhenMiddle - (mWidthWhenMiddle - mWidthWhenMin) * (mCurrentPercent - mPercentWhenMiddle) / (1 - mPercentWhenMiddle))
+        class DraggableSource @JvmOverloads constructor(
+                context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
+        ) : DraggablePanel(context, attrs, defStyleAttr) {
+        
+            var mWidthWhenMax = 0
+        
+            var mWidthWhenMiddle = 0
+        
+            var mWidthWhenMin = 0
+        
+            init {
+                getFrameFirst().addView(inflate(R.layout.layout_top))
+                getFrameSecond().addView(inflate(R.layout.layout_bottom))
+            }
+        
+            override fun initFrame() {
+                mWidthWhenMax = width
+        
+                mWidthWhenMiddle = (width - mPercentWhenMiddle * mMarginEdgeWhenMin).toInt()
+        
+                mWidthWhenMin = mHeightWhenMin * 22 / 9
+        
+                super.initFrame()
+            }
+        
+            override fun refreshFrameFirst() {
+                super.refreshFrameFirst()
+        
+                val width = if (mCurrentPercent < mPercentWhenMiddle) {
+                    (mWidthWhenMax - (mWidthWhenMax - mWidthWhenMiddle) * mCurrentPercent)
+                } else {
+                    (mWidthWhenMiddle - (mWidthWhenMiddle - mWidthWhenMin) * (mCurrentPercent - mPercentWhenMiddle) / (1 - mPercentWhenMiddle))
+                }
+        
+                frameTop.reWidth(width.toInt())
+            }
         }
-
-        frameTop.reWidth(width.toInt())
-    }
-}
 ```
 
-*Xml
+* Xml
 ```java
-<com.hoanganhtuan95ptit.example.custom.DraggableSource
-        android:id="@+id/draggablePanel"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:height_when_max="300dp"
-        app:height_when_min="80dp"
-        app:margin_bottom_when_min="8dp"
-        app:margin_edge_when_min="8dp"
-        app:percent_when_middle="0.9"
-        app:state="MIN" />
+        <com.hoanganhtuan95ptit.example.custom.DraggableSource
+                android:id="@+id/draggablePanel"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:height_when_max="300dp"
+                app:height_when_min="80dp"
+                app:margin_bottom_when_min="8dp"
+                app:margin_edge_when_min="8dp"
+                app:percent_when_middle="0.9"
+                app:state="MIN" />
 ```
 
-*Listener
+* Code
 
 ```java
         draggablePanel.setDraggableListener(object : DraggablePanel.DraggableListener {
