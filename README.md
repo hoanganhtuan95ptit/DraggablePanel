@@ -28,7 +28,7 @@ This application is built based on my understanding of android, so it may not be
 
 #### Using [Detail code java](https://github.com/hoanganhtuan95ptit/DraggablePanel/blob/master/example/src/main/java/com/hoanganhtuan95ptit/example/NormalActivity.kt)
 
-*Xml
+* Xml
 
 ```java
         <com.hoanganhtuan95ptit.draggable.DraggablePanel
@@ -42,6 +42,7 @@ This application is built based on my understanding of android, so it may not be
                 app:percent_when_middle="0.9"
                 app:state="MIN" />
 ```
+
 ![Alt text](output/height_when_max.png) | ![Alt text](output/height_when_min.png)
 --- | --- 
 
@@ -61,13 +62,16 @@ This application is built based on my understanding of android, so it may not be
 ```
 
 * Add frame
+
 ```java
         supportFragmentManager.beginTransaction().add(R.id.frameFirst, TopFragment()).commit() // add frame top
         supportFragmentManager.beginTransaction().add(R.id.frameSecond, BottomFragment()).commit() // add frame bottom
 ```
+
 ![Alt text](output/addFrame.png)
 
 * Action
+
 ```java
         btnMax.setOnClickListener { draggablePanel.maximize() }// maximize
         btnMin.setOnClickListener { draggablePanel.minimize() }//minimizeo

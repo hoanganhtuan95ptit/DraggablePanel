@@ -119,13 +119,14 @@ open class DraggablePanel @JvmOverloads constructor(
             override fun onInterceptTouchEvent(ev: MotionEvent?): Boolean {
                 when (ev!!.action) {
                     MotionEvent.ACTION_DOWN -> {
+                        firstViewDown = isViewUnder(frameFirst, ev)
                         downY = ev.rawY
-                        onTouchEvent(ev)
+//                        onTouchEvent(ev)
                     }
-                    MotionEvent.ACTION_CANCEL, MotionEvent.ACTION_UP -> {
-                        frameFirstMove = false
-                        firstViewDown = false
-                    }
+//                    MotionEvent.ACTION_CANCEL, MotionEvent.ACTION_UP -> {
+//                        frameFirstMove = false
+//                        firstViewDown = false
+//                    }
                     MotionEvent.ACTION_MOVE -> {
                         if (frameFirstMove) {
                             return true
@@ -133,6 +134,7 @@ open class DraggablePanel @JvmOverloads constructor(
                         val calculateDiff: Int = calculateDistance(ev, downY)
                         val scaledTouchSlop: Int = getScaledTouchSlop(getContext())
                         if (calculateDiff > scaledTouchSlop && firstViewDown) {
+                            deltaY =  ev.rawY.toInt() - (frameDrag.layoutParams as LayoutParams).topMargin
                             frameFirstMove = true
                             return true
                         }
@@ -144,10 +146,10 @@ open class DraggablePanel @JvmOverloads constructor(
             override fun onTouchEvent(ev: MotionEvent?): Boolean {
                 val motionY = ev!!.rawY.toInt()
                 when (ev.action) {
-                    MotionEvent.ACTION_DOWN -> {
-                        firstViewDown = isViewUnder(frameFirst, ev)
-                        deltaY = motionY - (frameDrag.layoutParams as LayoutParams).topMargin
-                    }
+//                    MotionEvent.ACTION_DOWN -> {
+//                        firstViewDown = isViewUnder(frameFirst, ev)
+//                        deltaY = motionY - (frameDrag.layoutParams as LayoutParams).topMargin
+//                    }
                     MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
                         frameFirstMove = false
                         firstViewDown = false
