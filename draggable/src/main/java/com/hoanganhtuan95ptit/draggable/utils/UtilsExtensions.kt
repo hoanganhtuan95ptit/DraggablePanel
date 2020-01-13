@@ -2,41 +2,11 @@ package com.hoanganhtuan95ptit.draggable.utils
 
 import android.animation.Animator
 import android.animation.PropertyValuesHolder
+import android.animation.TimeInterpolator
 import android.animation.ValueAnimator
 import android.content.res.Resources
 import android.util.TypedValue
-import androidx.dynamicanimation.animation.DynamicAnimation
-import androidx.dynamicanimation.animation.FloatValueHolder
-import androidx.dynamicanimation.animation.SpringAnimation
-import androidx.dynamicanimation.animation.SpringForce
-
-fun Float.springAnimation(minValue: Float,
-                          maxValue: Float,
-                          startValue: Float,
-                          endValue: Float,
-                          onUpdate: (Float) -> Unit,
-                          onEnd: () -> Unit) {
-    val springX = SpringForce(endValue)
-    springX.dampingRatio = 0.7f
-    springX.stiffness = 300f
-    val springAnimation = SpringAnimation(FloatValueHolder())
-    springAnimation.setStartVelocity(this)
-            .setMinValue(minValue)
-            .setMaxValue(maxValue)
-            .setStartValue(startValue)
-            .setSpring(springX)
-            .setMinimumVisibleChange(DynamicAnimation.MIN_VISIBLE_CHANGE_PIXELS)
-            .addUpdateListener { dynamicAnimation: DynamicAnimation<*>, value: Float, _: Float ->
-                onUpdate(value)
-                if (value == endValue) {
-                    dynamicAnimation.cancel()
-                }
-            }
-            .addEndListener { _: DynamicAnimation<*>?, _: Boolean, _: Float, _: Float ->
-                onEnd()
-            }
-            .start()
-}
+import android.view.animation.LinearInterpolator
 
 fun ArrayList<ValuesHolder>.animation(
         duration: Long,
@@ -50,6 +20,26 @@ fun ArrayList<ValuesHolder>.animation(
 
 fun Array<ValuesHolder?>.animation(
         duration: Long,
+        onUpdate: (HashMap<String, Any>, ValueAnimator) -> Unit,
+        onEnd: () -> Unit
+) {
+    animation(duration, LinearInterpolator(), onUpdate, onEnd)
+}
+
+fun ArrayList<ValuesHolder>.animation(
+        duration: Long,
+        timeInterpolator: TimeInterpolator,
+        onUpdate: (HashMap<String, Any>, ValueAnimator) -> Unit,
+        onEnd: () -> Unit
+) {
+    val array = arrayOfNulls<ValuesHolder>(size)
+    toArray(array)
+    array.animation(duration, timeInterpolator, onUpdate, onEnd)
+}
+
+fun Array<ValuesHolder?>.animation(
+        duration: Long,
+        timeInterpolator: TimeInterpolator,
         onUpdate: (HashMap<String, Any>, ValueAnimator) -> Unit,
         onEnd: () -> Unit
 ) {
@@ -86,7 +76,7 @@ fun Array<ValuesHolder?>.animation(
     animator.withEndAction(Runnable {
         onEnd()
     })
-
+    animator.interpolator = timeInterpolator
     animator.duration = duration
     animator.start()
 }
@@ -135,26 +125,4 @@ fun Float.toPx(): Int {
             this,
             Resources.getSystem().displayMetrics
     ).toInt()
-}
-
-fun Float.springYAnim(minValue: Float, maxValue: Float, startValue: Float, velocityY: Float, onUpdate: (DynamicAnimation<*>, Float) -> Unit, onEnd:()->Unit) {
-    val springX = SpringForce(this)
-    springX.dampingRatio = 0.7f
-    springX.stiffness = 300f
-
-    val springAnimation = SpringAnimation(FloatValueHolder())
-    springAnimation.setStartVelocity(velocityY)
-            .setMinValue(minValue)
-            .setMaxValue(maxValue)
-            .setStartValue(startValue)
-            .setSpring(springX)
-            .setMinimumVisibleChange(DynamicAnimation.MIN_VISIBLE_CHANGE_PIXELS)
-            .addUpdateListener { dynamicAnimation: DynamicAnimation<*>, value: Float, _: Float ->
-                onUpdate(dynamicAnimation, value)
-                if (value == this) dynamicAnimation.cancel()
-            }
-            .addEndListener { _: DynamicAnimation<*>?, b: Boolean, _: Float, _: Float ->
-                onEnd()
-            }
-            .start()
 }

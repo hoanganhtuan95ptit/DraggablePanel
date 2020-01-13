@@ -1,11 +1,12 @@
 package com.hoanganhtuan95ptit.draggable
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
 import android.view.*
+import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.RelativeLayout
 import androidx.coordinatorlayout.widget.CoordinatorLayout
-import androidx.dynamicanimation.animation.DynamicAnimation
 import com.google.android.material.appbar.AppBarLayout
 import com.hoanganhtuan95ptit.draggable.utils.*
 import com.hoanganhtuan95ptit.draggable.widget.DragBehavior
@@ -121,12 +122,7 @@ open class DraggablePanel @JvmOverloads constructor(
                     MotionEvent.ACTION_DOWN -> {
                         firstViewDown = isViewUnder(frameFirst, ev)
                         downY = ev.rawY
-//                        onTouchEvent(ev)
                     }
-//                    MotionEvent.ACTION_CANCEL, MotionEvent.ACTION_UP -> {
-//                        frameFirstMove = false
-//                        firstViewDown = false
-//                    }
                     MotionEvent.ACTION_MOVE -> {
                         if (frameFirstMove) {
                             return true
@@ -134,7 +130,7 @@ open class DraggablePanel @JvmOverloads constructor(
                         val calculateDiff: Int = calculateDistance(ev, downY)
                         val scaledTouchSlop: Int = getScaledTouchSlop(getContext())
                         if (calculateDiff > scaledTouchSlop && firstViewDown) {
-                            deltaY =  ev.rawY.toInt() - (frameDrag.layoutParams as LayoutParams).topMargin
+                            deltaY = ev.rawY.toInt() - (frameDrag.layoutParams as LayoutParams).topMargin
                             frameFirstMove = true
                             return true
                         }
@@ -146,10 +142,6 @@ open class DraggablePanel @JvmOverloads constructor(
             override fun onTouchEvent(ev: MotionEvent?): Boolean {
                 val motionY = ev!!.rawY.toInt()
                 when (ev.action) {
-//                    MotionEvent.ACTION_DOWN -> {
-//                        firstViewDown = isViewUnder(frameFirst, ev)
-//                        deltaY = motionY - (frameDrag.layoutParams as LayoutParams).topMargin
-//                    }
                     MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
                         frameFirstMove = false
                         firstViewDown = false
@@ -163,13 +155,17 @@ open class DraggablePanel @JvmOverloads constructor(
             }
 
             private fun handleUp() {
-                val finalPosition = if (abs(velocityY) < 200) {
-                    if (mCurrentMarginTop > mMarginTopWhenMin - mCurrentMarginTop) mMarginTopWhenMin else 0
+                val moveToMin = if (abs(velocityY) < 200) {
+                    mCurrentMarginTop > mMarginTopWhenMin - mCurrentMarginTop
                 } else {
-                    if (velocityY < 0) 0 else mMarginTopWhenMin
+                    velocityY >= 0
                 }
 
-                finalPosition.toFloat().springYAnim {}
+                if(moveToMin){
+                    maxToMinAnim {  }
+                }else{
+                    minToMaxAnim {  }
+                }
             }
 
             private fun handleMove(motionY: Int) {
@@ -245,17 +241,9 @@ open class DraggablePanel @JvmOverloads constructor(
         return frameSecond
     }
 
-    open fun setDraggableListener(draggableListener: DraggableListener){
-        mDraggableListener=draggableListener
+    open fun setDraggableListener(draggableListener: DraggableListener) {
+        mDraggableListener = draggableListener
     }
-
-//    open fun setHeightMaxDefault(height: Int) {
-//        tempHeight = height
-//        mHeightWhenMiddleDefault = height
-//        if (init) {
-//            maximize()
-//        }
-//    }
 
     open fun setHeightMax(height: Int) {
         tempHeight = height
@@ -278,15 +266,11 @@ open class DraggablePanel @JvmOverloads constructor(
                 }
             }
             State.MIN -> {
-                0f.springYAnim {
-                    maximize()
-                }
+                minToMaxAnim { maximize() }
             }
             else -> {
                 visible()
-                translationYAnim(0.toFloat()) {
-                    maximize()
-                }
+                closeToMinAnim { maximize() }
             }
         }
     }
@@ -298,9 +282,7 @@ open class DraggablePanel @JvmOverloads constructor(
         }
         when (mCurrentState) {
             State.MAX -> {
-                mMarginTopWhenMin.toFloat().springYAnim {
-                    minimize()
-                }
+                maxToMinAnim { minimize() }
             }
             State.MIN -> {
                 visible()
@@ -308,9 +290,7 @@ open class DraggablePanel @JvmOverloads constructor(
             }
             else -> {
                 visible()
-                translationYAnim(0.toFloat()) {
-                    minimize()
-                }
+                closeToMinAnim { minimize() }
             }
         }
     }
@@ -322,14 +302,10 @@ open class DraggablePanel @JvmOverloads constructor(
         }
         when (mCurrentState) {
             State.MAX -> {
-                mMarginTopWhenMin.toFloat().springYAnim {
-                    close()
-                }
+                maxToMinAnim { close() }
             }
             State.MIN -> {
-                translationYAnim((mHeightWhenMinDefault + mMarginBottomWhenMin).toFloat()) {
-                    close()
-                }
+                minToCloseAnim { close() }
             }
             else -> {
                 gone()
@@ -338,6 +314,7 @@ open class DraggablePanel @JvmOverloads constructor(
         }
     }
 
+    @SuppressLint("Recycle")
     override fun onInterceptTouchEvent(ev: MotionEvent): Boolean {
         when (ev.action) {
             MotionEvent.ACTION_DOWN -> {
@@ -426,6 +403,30 @@ open class DraggablePanel @JvmOverloads constructor(
         appbarLayout.reHeight(frameFistHeight.toInt())
     }
 
+    private fun minToMaxAnim(onEnd: () -> Unit) {
+        percentAnim(0f) {
+            onEnd()
+        }
+    }
+
+    private fun maxToMinAnim(onEnd: () -> Unit) {
+        percentAnim(1f) {
+            onEnd()
+        }
+    }
+
+    private fun minToCloseAnim(onEnd: () -> Unit) {
+        translationYAnim((mHeightWhenMinDefault + mMarginBottomWhenMin).toFloat()) {
+            onEnd()
+        }
+    }
+
+    private fun closeToMinAnim(onEnd: () -> Unit) {
+        translationYAnim((0).toFloat()) {
+            onEnd()
+        }
+    }
+
     private fun View.translationYAnim(value: Float, onEnd: () -> Unit) {
         translationYAnim(value, 300) {
             updateState()
@@ -433,10 +434,14 @@ open class DraggablePanel @JvmOverloads constructor(
         }
     }
 
-    private fun Float.springYAnim(onEnd: () -> Unit) {
-        springYAnim(0.toFloat(), mMarginTopWhenMin.toFloat(), mCurrentMarginTop.toFloat(), velocityY, { animation: DynamicAnimation<*>, value: Float ->
-            setMarginTop(value.toInt())
+    private fun percentAnim(value: Float, onEnd: () -> Unit) {
+        val pointList = ArrayList<ValuesHolder>()
+        pointList.add(ValuesHolder("percent", mCurrentPercent * 1000f, value * 1000f))
+        pointList.animation(400, AccelerateDecelerateInterpolator(), { keyData, _ ->
+            val percent = (keyData["percent"] as Float) / 1000f
+            setMarginTop((mMarginTopWhenMin * percent).toInt())
         }, {
+            updateState()
             onEnd()
         })
     }

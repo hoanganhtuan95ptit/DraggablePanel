@@ -42,5 +42,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:height_when_max="300dp"
+        app:height_when_min="58dp"
         app:state="MIN" />
 </androidx.constraintlayout.widget.ConstraintLayout>
