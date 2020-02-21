@@ -7,6 +7,38 @@ import android.animation.ValueAnimator
 import android.content.res.Resources
 import android.util.TypedValue
 import android.view.animation.LinearInterpolator
+import androidx.dynamicanimation.animation.DynamicAnimation
+import androidx.dynamicanimation.animation.FloatValueHolder
+import androidx.dynamicanimation.animation.SpringAnimation
+import androidx.dynamicanimation.animation.SpringForce
+
+fun Float.springAnimation(minValue: Float,
+                          maxValue: Float,
+                          startValue: Float,
+                          endValue: Float,
+                          onUpdate: (Float) -> Unit,
+                          onEnd: () -> Unit) {
+    val springX = SpringForce(endValue)
+    springX.dampingRatio = 0.7f
+    springX.stiffness = 300f
+    val springAnimation = SpringAnimation(FloatValueHolder())
+    springAnimation.setStartVelocity(this)
+            .setMinValue(minValue)
+            .setMaxValue(maxValue)
+            .setStartValue(startValue)
+            .setSpring(springX)
+            .setMinimumVisibleChange(DynamicAnimation.MIN_VISIBLE_CHANGE_PIXELS)
+            .addUpdateListener { dynamicAnimation: DynamicAnimation<*>, value: Float, _: Float ->
+                onUpdate(value)
+                if (value == endValue) {
+                    dynamicAnimation.cancel()
+                }
+            }
+            .addEndListener { _: DynamicAnimation<*>?, _: Boolean, _: Float, _: Float ->
+                onEnd()
+            }
+            .start()
+}
 
 fun ArrayList<ValuesHolder>.animation(
         duration: Long,

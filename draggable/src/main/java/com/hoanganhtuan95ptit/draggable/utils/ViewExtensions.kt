@@ -3,7 +3,6 @@ package com.hoanganhtuan95ptit.draggable.utils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.RelativeLayout
 import androidx.annotation.LayoutRes
 
 fun View.gone() {
@@ -69,11 +68,21 @@ fun View.translationYAnim(
 }
 
 fun View.reHeight(height: Int) {
-    resize(-1, height)
+    val newHeight = if (height >= 0) height else 0
+
+    if (newHeight != layoutParams.height) {
+        layoutParams.height = height
+        layoutParams = layoutParams
+    }
 }
 
 fun View.reWidth(width: Int) {
-    resize(width, -1)
+    val newWidth = if (width >= 0) width else 0
+
+    if (newWidth != layoutParams.width) {
+        layoutParams.width = width
+        layoutParams = layoutParams
+    }
 }
 
 fun View.resize(width: Int, height: Int) {

@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
 import android.view.*
-import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.RelativeLayout
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import com.google.android.material.appbar.AppBarLayout
@@ -42,7 +41,8 @@ open class DraggablePanel @JvmOverloads constructor(
         }
     }
 
-    var init = false
+    var frameInitializing = false
+
     var tempState: State? = null
     var tempHeight = 0
 
@@ -161,10 +161,10 @@ open class DraggablePanel @JvmOverloads constructor(
                     velocityY >= 0
                 }
 
-                if(moveToMin){
-                    maxToMinAnim {  }
-                }else{
-                    minToMaxAnim {  }
+                if (moveToMin) {
+                    maxToMinAnim { }
+                } else {
+                    minToMaxAnim { }
                 }
             }
 
@@ -186,7 +186,8 @@ open class DraggablePanel @JvmOverloads constructor(
             private var verticalOffsetOld = 0
 
             override fun onOffsetChanged(appBarLayout: AppBarLayout?, verticalOffset: Int) {
-                if (init && mCurrentPercent == 0f && !frameFirstMove) {
+                if (frameInitializing && mCurrentPercent == 0f && !frameFirstMove) {
+                    println("onOffsetChanged")
                     val offset = abs(verticalOffset)
                     val delta = offset - verticalOffsetOld
                     verticalOffsetOld = offset
@@ -199,7 +200,7 @@ open class DraggablePanel @JvmOverloads constructor(
     }
 
     open fun initFrame() {
-        init = true
+        frameInitializing = true
 
         val params = frameFirst.layoutParams as CoordinatorLayout.LayoutParams
         params.behavior = DragBehavior(frameSecond)
@@ -247,13 +248,13 @@ open class DraggablePanel @JvmOverloads constructor(
 
     open fun setHeightMax(height: Int) {
         tempHeight = height
-        if (init) {
+        if (frameInitializing) {
             maximize()
         }
     }
 
     open fun maximize() {
-        if (!init) {
+        if (!frameInitializing) {
             tempState = State.MAX
             return
         }
@@ -276,7 +277,7 @@ open class DraggablePanel @JvmOverloads constructor(
     }
 
     open fun minimize() {
-        if (!init) {
+        if (!frameInitializing) {
             tempState = State.MIN
             return
         }
@@ -296,7 +297,7 @@ open class DraggablePanel @JvmOverloads constructor(
     }
 
     open fun close() {
-        if (!init) {
+        if (!frameInitializing) {
             tempState = State.MIN
             return
         }
@@ -381,12 +382,19 @@ open class DraggablePanel @JvmOverloads constructor(
         layoutParams.bottomMargin = (mMarginBottomWhenMin * mCurrentPercent).toInt()
         frameDrag.layoutParams = layoutParams
 
-        val toolBarHeight = if (mCurrentPercent < mPercentWhenMiddle) {
-            (mHeightWhenMaxDefault - (mHeightWhenMaxDefault - mHeightWhenMiddleDefault) * mCurrentPercent / mPercentWhenMiddle)
-        } else {
-            (mHeightWhenMiddleDefault - (mHeightWhenMiddleDefault - mHeightWhenMinDefault) * (mCurrentPercent - mPercentWhenMiddle) / (1 - mPercentWhenMiddle))
+        val toolBarHeight = when {
+            frameFirstMove -> {
+                (mHeightWhenMaxDefault - (mHeightWhenMaxDefault - mHeightWhenMinDefault) * mCurrentPercent).toInt()
+            }
+            mCurrentPercent == 0f -> {
+                mHeightWhenMaxDefault
+            }
+            else -> {
+                mHeightWhenMinDefault
+            }
         }
-        toolbar.reHeight(toolBarHeight.toInt())
+
+        toolbar.reHeight(toolBarHeight)
 
         refreshFrameFirst()
     }
@@ -404,15 +412,11 @@ open class DraggablePanel @JvmOverloads constructor(
     }
 
     private fun minToMaxAnim(onEnd: () -> Unit) {
-        percentAnim(0f) {
-            onEnd()
-        }
+        springYAnim(0f, onEnd)
     }
 
     private fun maxToMinAnim(onEnd: () -> Unit) {
-        percentAnim(1f) {
-            onEnd()
-        }
+        springYAnim(mMarginTopWhenMin.toFloat(), onEnd)
     }
 
     private fun minToCloseAnim(onEnd: () -> Unit) {
@@ -434,14 +438,10 @@ open class DraggablePanel @JvmOverloads constructor(
         }
     }
 
-    private fun percentAnim(value: Float, onEnd: () -> Unit) {
-        val pointList = ArrayList<ValuesHolder>()
-        pointList.add(ValuesHolder("percent", mCurrentPercent * 1000f, value * 1000f))
-        pointList.animation(400, AccelerateDecelerateInterpolator(), { keyData, _ ->
-            val percent = (keyData["percent"] as Float) / 1000f
-            setMarginTop((mMarginTopWhenMin * percent).toInt())
+    private fun springYAnim(endValue: Float, onEnd: () -> Unit) {
+        velocityY.springAnimation(0.toFloat(), mMarginTopWhenMin.toFloat(), mCurrentMarginTop.toFloat(), endValue, { value: Float ->
+            setMarginTop(value.toInt())
         }, {
-            updateState()
             onEnd()
         })
     }
