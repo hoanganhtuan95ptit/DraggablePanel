@@ -22,7 +22,7 @@ This application is built based on my understanding of android, so it may not be
     
     
     	dependencies {
-	        implementation 'com.github.hoanganhtuan95ptit:DraggablePanel:1.1.2'
+	        implementation 'com.github.hoanganhtuan95ptit:DraggablePanel:1.1.3'
 	}
 ```
 
