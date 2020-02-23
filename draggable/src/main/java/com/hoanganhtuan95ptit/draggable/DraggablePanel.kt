@@ -148,7 +148,9 @@ open class DraggablePanel @JvmOverloads constructor(
                         handleUp()
                     }
                     MotionEvent.ACTION_MOVE -> {
-                        handleMove(motionY)
+                        if (frameFirstMove) {
+                            handleMove(motionY)
+                        }
                     }
                 }
                 return firstViewDown
