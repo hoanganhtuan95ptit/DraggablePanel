@@ -187,7 +187,6 @@ open class DraggablePanel @JvmOverloads constructor(
 
             override fun onOffsetChanged(appBarLayout: AppBarLayout?, verticalOffset: Int) {
                 if (frameInitializing && mCurrentPercent == 0f && !frameFirstMove) {
-                    println("onOffsetChanged")
                     val offset = abs(verticalOffset)
                     val delta = offset - verticalOffsetOld
                     verticalOffsetOld = offset
