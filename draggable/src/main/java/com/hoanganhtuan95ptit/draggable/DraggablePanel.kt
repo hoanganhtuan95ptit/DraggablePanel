@@ -249,14 +249,14 @@ open class DraggablePanel @JvmOverloads constructor(
 
     open fun setHeightMax(height: Int) {
         tempHeight = height
-        if (frameInitializing) {
+        if (frameInitializing && tempState == mCurrentState) {
             maximize()
         }
     }
 
     open fun maximize() {
+        tempState = State.MAX
         if (!frameInitializing) {
-            tempState = State.MAX
             return
         }
         when (mCurrentState) {
@@ -278,8 +278,8 @@ open class DraggablePanel @JvmOverloads constructor(
     }
 
     open fun minimize() {
+        tempState = State.MIN
         if (!frameInitializing) {
-            tempState = State.MIN
             return
         }
         when (mCurrentState) {
@@ -298,8 +298,8 @@ open class DraggablePanel @JvmOverloads constructor(
     }
 
     open fun close() {
+        tempState = State.CLOSE
         if (!frameInitializing) {
-            tempState = State.MIN
             return
         }
         when (mCurrentState) {
@@ -413,20 +413,24 @@ open class DraggablePanel @JvmOverloads constructor(
     }
 
     private fun minToMaxAnim(onEnd: () -> Unit) {
+        tempState = State.MAX
         springYAnim(0f, onEnd)
     }
 
     private fun maxToMinAnim(onEnd: () -> Unit) {
+        tempState = State.MIN
         springYAnim(mMarginTopWhenMin.toFloat(), onEnd)
     }
 
     private fun minToCloseAnim(onEnd: () -> Unit) {
+        tempState = State.CLOSE
         translationYAnim((mHeightWhenMinDefault + mMarginBottomWhenMin).toFloat()) {
             onEnd()
         }
     }
 
     private fun closeToMinAnim(onEnd: () -> Unit) {
+        tempState = State.MIN
         translationYAnim((0).toFloat()) {
             onEnd()
         }
