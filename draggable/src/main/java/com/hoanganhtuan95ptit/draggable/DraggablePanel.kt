@@ -468,6 +468,7 @@ open class DraggablePanel @JvmOverloads constructor(
         velocityY.springAnimation(0.toFloat(), mMarginTopWhenMin.toFloat(), mCurrentMarginTop.toFloat(), endValue, { value: Float ->
             setMarginTop(value.toInt())
         }, {
+            updateState()
             onEnd()
         })
     }
