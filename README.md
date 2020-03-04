@@ -17,7 +17,7 @@
     
     
     	dependencies {
-	        implementation 'com.github.hoanganhtuan95ptit:DraggablePanel:1.1.8'
+	        implementation 'com.github.hoanganhtuan95ptit:DraggablePanel:1.1.7'
 	}
 ```
 
