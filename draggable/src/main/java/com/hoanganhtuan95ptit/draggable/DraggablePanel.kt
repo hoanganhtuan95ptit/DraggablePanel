@@ -148,7 +148,7 @@ open class DraggablePanel @JvmOverloads constructor(
                 return firstViewDown
             }
 
-            private fun checkFrameFirstMove(ev: MotionEvent){
+            private fun checkFrameFirstMove(ev: MotionEvent) {
                 if (firstViewMove) return
                 val calculateDiff: Int = calculateDistance(ev, downY)
                 val scaledTouchSlop: Int = getScaledTouchSlop(getContext())
@@ -166,9 +166,9 @@ open class DraggablePanel @JvmOverloads constructor(
                 }
 
                 if (moveToMin) {
-                    maxToMinAnim { }
+                    maxToMinAnim { minimize() }
                 } else {
-                    minToMaxAnim { }
+                    minToMaxAnim { maximize() }
                 }
             }
 
@@ -492,8 +492,8 @@ open class DraggablePanel @JvmOverloads constructor(
     }
 
     interface DraggableListener {
-        fun onChangeState(state: State){}
-        fun onChangePercent(percent: Float){}
+        fun onChangeState(state: State) {}
+        fun onChangePercent(percent: Float) {}
     }
 
     enum class State {
