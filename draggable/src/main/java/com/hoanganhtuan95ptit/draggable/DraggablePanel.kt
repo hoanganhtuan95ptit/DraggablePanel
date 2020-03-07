@@ -285,6 +285,8 @@ open class DraggablePanel @JvmOverloads constructor(
 
                     if (mCurrentPercent != 0f || !needExpand) {//
                         updateState()
+
+                        mDraggableListener?.onExpaned()
                         return@resizeAnimation
                     }
 
@@ -296,9 +298,13 @@ open class DraggablePanel @JvmOverloads constructor(
                             }
 
                             if (abs(verticalOffset) == 0) {
-                                appbarLayout.removeOnOffsetChangedListener(this)
-                                needExpand = false
                                 updateState()
+
+                                needExpand = false
+
+                                mDraggableListener?.onExpaned()
+
+                                appbarLayout.removeOnOffsetChangedListener(this)
                             }
                         }
                     })
@@ -516,6 +522,7 @@ open class DraggablePanel @JvmOverloads constructor(
     }
 
     interface DraggableListener {
+        fun onExpaned(){}
         fun onChangeState(state: State) {}
         fun onChangePercent(percent: Float) {}
     }
