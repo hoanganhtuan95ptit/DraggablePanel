@@ -243,6 +243,18 @@ open class DraggablePanel @JvmOverloads constructor(
         }
     }
 
+    open fun isMaximize(): Boolean {
+        return mCurrentState == State.MAX
+    }
+
+    open fun isMinimize(): Boolean {
+        return mCurrentState == State.MIN
+    }
+
+    open fun isClose(): Boolean {
+        return mCurrentState == State.CLOSE
+    }
+
     open fun getFrameDrag(): ViewGroup {
         return frameDrag
     }
@@ -285,8 +297,6 @@ open class DraggablePanel @JvmOverloads constructor(
 
                     if (mCurrentPercent != 0f || !needExpand) {//
                         updateState()
-
-                        mDraggableListener?.onExpaned()
                         return@resizeAnimation
                     }
 
@@ -522,7 +532,7 @@ open class DraggablePanel @JvmOverloads constructor(
     }
 
     interface DraggableListener {
-        fun onExpaned(){}
+        fun onExpaned() {}
         fun onChangeState(state: State) {}
         fun onChangePercent(percent: Float) {}
     }
