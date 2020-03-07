@@ -7,11 +7,13 @@ import android.view.*
 import android.widget.RelativeLayout
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import com.google.android.material.appbar.AppBarLayout
+import com.google.android.material.appbar.AppBarLayout.OnOffsetChangedListener
 import com.hoanganhtuan95ptit.draggable.utils.*
 import com.hoanganhtuan95ptit.draggable.widget.DragBehavior
 import com.hoanganhtuan95ptit.draggable.widget.DragFrame
 import kotlinx.android.synthetic.main.layout_draggable_panel.view.*
 import kotlin.math.abs
+
 
 open class DraggablePanel @JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
@@ -43,13 +45,14 @@ open class DraggablePanel @JvmOverloads constructor(
 
     var frameInitializing = false// toàn bộ giao diện đã được khởi tạo hay chưa
 
-    var finalState: State? = null// trạng thái của Draggable đang hướng đến
-    var finalHeight = 0// chiều tao của view first đang hướng đến khi max
+    var mTempState: State? = null// trạng thái của Draggable đang hướng đến
+    var mTempHeight = 0// chiều tao của view first đang hướng đến khi max
 
+    var needExpand = true// cần expand appbarLayout
     var firstViewMove = false// view first đang được di chuyển
 
-    var velocityY = 0f
-    var velocityTracker: VelocityTracker? = null
+    var velocityY = 0f// tốc độ khi  MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL
+    var velocityTracker: VelocityTracker? = null // tốc độ khi  MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL
 
     var mCurrentState: State? = null
     var mCurrentPercent = -1f
@@ -89,7 +92,7 @@ open class DraggablePanel @JvmOverloads constructor(
 
             mMarginBottomWhenMin = typedArray.getDimensionPixelSize(R.styleable.DraggablePanel_margin_bottom_when_min, 8.toPx())
 
-            finalState = State.values()[typedArray.getInt(R.styleable.DraggablePanel_state, 3)]
+            mTempState = State.values()[typedArray.getInt(R.styleable.DraggablePanel_state, 3)]
 
             typedArray.recycle()
         } else {
@@ -103,10 +106,10 @@ open class DraggablePanel @JvmOverloads constructor(
 
             mMarginBottomWhenMin = 8.toPx()
 
-            finalState = State.CLOSE
+            mTempState = State.CLOSE
         }
 
-        finalHeight = mHeightWhenMax
+        mTempHeight = mHeightWhenMax
         mHeightWhenMaxDefault = mHeightWhenMax
         mHeightWhenMinDefault = mHeightWhenMin
 
@@ -214,7 +217,7 @@ open class DraggablePanel @JvmOverloads constructor(
 
         mMarginTopWhenMin = height - mHeightWhenMin - mMarginBottomWhenMin
 
-        mHeightWhenMax = finalHeight
+        mHeightWhenMax = mTempHeight
         mHeightWhenMaxDefault = (width * 9 / 16f).toInt()
 
         mHeightWhenMiddle = (height - mPercentWhenMiddle * mMarginBottomWhenMin - mPercentWhenMiddle * mMarginTopWhenMin).toInt()
@@ -227,7 +230,7 @@ open class DraggablePanel @JvmOverloads constructor(
         setMarginTop(mMarginTopWhenMin)
         gone()
 
-        when (finalState) {
+        when (mTempState) {
             State.MAX -> {
                 maximize()
             }
@@ -260,8 +263,9 @@ open class DraggablePanel @JvmOverloads constructor(
      * thiết lập chiều cao first view
      */
     open fun setHeightMax(height: Int) {
-        finalHeight = height
-        if (frameInitializing && finalState == mCurrentState) {// nếu view đã được khởi tạo và đã không drag thì sẽ mở rộng
+        needExpand = true
+        mTempHeight = height
+        if (frameInitializing && mTempState == mCurrentState) {// nếu view đã được khởi tạo và đã không drag thì sẽ mở rộng
             maximize()
         }
     }
@@ -270,16 +274,35 @@ open class DraggablePanel @JvmOverloads constructor(
      * mở rộng lâyout
      */
     open fun maximize() {
-        finalState = State.MAX
+        mTempState = State.MAX
         if (!frameInitializing) {
             return
         }
         when (mCurrentState) {
             State.MAX -> {
-                appbarLayout.resizeAnimation(-1, finalHeight, 300) {
-                    mHeightWhenMax = finalHeight
+                appbarLayout.resizeAnimation(-1, mTempHeight, 300) {
+                    mHeightWhenMax = mTempHeight
+
+                    if (mCurrentPercent != 0f || !needExpand) {//
+                        updateState()
+                        return@resizeAnimation
+                    }
+
+                    appbarLayout.addOnOffsetChangedListener(object : OnOffsetChangedListener {
+                        override fun onOffsetChanged(appBarLayout: AppBarLayout?, verticalOffset: Int) {
+                            if (mCurrentPercent != 0f || !needExpand) {
+                                appbarLayout.removeOnOffsetChangedListener(this)
+                                return
+                            }
+
+                            if (abs(verticalOffset) == 0) {
+                                appbarLayout.removeOnOffsetChangedListener(this)
+                                needExpand = false
+                                updateState()
+                            }
+                        }
+                    })
                     appbarLayout.setExpanded(true, true)
-                    updateState()
                 }
             }
             State.MIN -> {
@@ -296,7 +319,7 @@ open class DraggablePanel @JvmOverloads constructor(
      * thu nhỏ layout
      */
     open fun minimize() {
-        finalState = State.MIN
+        mTempState = State.MIN
         if (!frameInitializing) {
             return
         }
@@ -319,7 +342,7 @@ open class DraggablePanel @JvmOverloads constructor(
      * đóng layout
      */
     open fun close() {
-        finalState = State.CLOSE
+        mTempState = State.CLOSE
         if (!frameInitializing) {
             return
         }
@@ -434,24 +457,24 @@ open class DraggablePanel @JvmOverloads constructor(
     }
 
     private fun minToMaxAnim(onEnd: () -> Unit) {
-        finalState = State.MAX
+        mTempState = State.MAX
         springYAnim(0f, onEnd)
     }
 
     private fun maxToMinAnim(onEnd: () -> Unit) {
-        finalState = State.MIN
+        mTempState = State.MIN
         springYAnim(mMarginTopWhenMin.toFloat(), onEnd)
     }
 
     private fun minToCloseAnim(onEnd: () -> Unit) {
-        finalState = State.CLOSE
+        mTempState = State.CLOSE
         translationYAnim((mHeightWhenMinDefault + mMarginBottomWhenMin).toFloat()) {
             onEnd()
         }
     }
 
     private fun closeToMinAnim(onEnd: () -> Unit) {
-        finalState = State.MIN
+        mTempState = State.MIN
         translationYAnim((0).toFloat()) {
             onEnd()
         }
