@@ -28,7 +28,7 @@ class DraggableSource @JvmOverloads constructor(
 
         mWidthWhenMiddle = (width - mPercentWhenMiddle * mMarginEdgeWhenMin).toInt()
 
-        mWidthWhenMin = mHeightWhenMin * 22 / 9
+        mWidthWhenMin = mHeightWhenMinDefault * 22 / 9
 
         super.initFrame()
     }
@@ -42,6 +42,13 @@ class DraggableSource @JvmOverloads constructor(
             (mWidthWhenMiddle - (mWidthWhenMiddle - mWidthWhenMin) * (mCurrentPercent - mPercentWhenMiddle) / (1 - mPercentWhenMiddle))
         }
 
+        println(DraggableSource::class.java.simpleName + ".refreshFrameFirst "
+                + width + "  "
+                + mCurrentPercent + "  "
+                + mPercentWhenMiddle + "  "
+                + mWidthWhenMax + "  "
+                + mWidthWhenMiddle + "  "
+                + mWidthWhenMin + "  ")
         frameTop.reWidth(width.toInt())
     }
 }

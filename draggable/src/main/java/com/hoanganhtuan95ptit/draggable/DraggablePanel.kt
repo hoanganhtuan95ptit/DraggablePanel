@@ -2,7 +2,9 @@ package com.hoanganhtuan95ptit.draggable
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.Rect
 import android.util.AttributeSet
+import android.util.Log
 import android.view.*
 import android.widget.RelativeLayout
 import androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -14,12 +16,13 @@ import com.hoanganhtuan95ptit.draggable.widget.DragFrame
 import kotlinx.android.synthetic.main.layout_draggable_panel.view.*
 import kotlin.math.abs
 
-
 open class DraggablePanel @JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : RelativeLayout(context, attrs, defStyleAttr) {
 
     companion object {
+
+        var DEBUG = true
 
         private var scaledTouchSlop = 0
 
@@ -182,8 +185,11 @@ open class DraggablePanel @JvmOverloads constructor(
         }
 
         viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
+            private var currentHeight = 0
             override fun onGlobalLayout() {
-                viewTreeObserver.removeOnGlobalLayoutListener(this)
+                if (height == currentHeight) return
+                currentHeight = height
+
                 initFrame()
             }
         })
@@ -194,12 +200,15 @@ open class DraggablePanel @JvmOverloads constructor(
 
             override fun onOffsetChanged(appBarLayout: AppBarLayout?, verticalOffset: Int) {
                 if (frameInitializing && mCurrentPercent == 0f && !firstViewMove) {
+                    println("onOffsetChanged")
                     val offset = abs(verticalOffset)
                     val delta = offset - verticalOffsetOld
                     verticalOffsetOld = offset
 
                     mHeightWhenMin += delta
                     mHeightWhenMiddle += delta
+
+                    println("onOffsetChanged   " + mHeightWhenMin + "   " + mHeightWhenMiddle)
                 }
             }
         })
@@ -215,7 +224,8 @@ open class DraggablePanel @JvmOverloads constructor(
         params.behavior = DragBehavior(frameSecond)
         frameFirst.layoutParams = params
 
-        mMarginTopWhenMin = height - mHeightWhenMin - mMarginBottomWhenMin
+        mMarginTopWhenMin = height - mHeightWhenMinDefault - mMarginBottomWhenMin
+//        mMarginTopWhenMin = height - mHeightWhenMin - mMarginBottomWhenMin
 
         mHeightWhenMax = mTempHeight
         mHeightWhenMaxDefault = (width * 9 / 16f).toInt()
@@ -223,24 +233,28 @@ open class DraggablePanel @JvmOverloads constructor(
         mHeightWhenMiddle = (height - mPercentWhenMiddle * mMarginBottomWhenMin - mPercentWhenMiddle * mMarginTopWhenMin).toInt()
         mHeightWhenMiddleDefault = mHeightWhenMiddle
 
-        /**
-         * close
-         */
-        translationY = (mHeightWhenMinDefault + mMarginBottomWhenMin).toFloat()
-        setMarginTop(mMarginTopWhenMin)
-        gone()
+        println("initFrame $mMarginTopWhenMin")
 
-        when (mTempState) {
-            State.MAX -> {
-                maximize()
+        if (mCurrentState == null) {
+            translationY = (mHeightWhenMinDefault + mMarginBottomWhenMin).toFloat()
+            setMarginTop(mMarginTopWhenMin)
+            gone()
+
+            when (mTempState) {
+                State.MAX -> {
+                    maximize()
+                }
+                State.MIN -> {
+                    minimize()
+                }
+                else -> {
+                    close()
+                }
             }
-            State.MIN -> {
-                minimize()
-            }
-            else -> {
-                close()
-            }
+        } else {
+            refresh()
         }
+
     }
 
     open fun isMaximize(): Boolean {
@@ -286,16 +300,18 @@ open class DraggablePanel @JvmOverloads constructor(
      * mở rộng lâyout
      */
     open fun maximize() {
+        println("maximize")
         mTempState = State.MAX
         if (!frameInitializing) {
             return
         }
         when (mCurrentState) {
             State.MAX -> {
+                println("maximize MAX")
                 appbarLayout.resizeAnimation(-1, mTempHeight, 300) {
                     mHeightWhenMax = mTempHeight
 
-                    if (mCurrentPercent != 0f || !needExpand) {//
+                    if (mCurrentPercent != 0f || !needExpand) {
                         updateState()
                         return@resizeAnimation
                     }
@@ -322,11 +338,16 @@ open class DraggablePanel @JvmOverloads constructor(
                 }
             }
             State.MIN -> {
+                println("maximize MIN")
                 minToMaxAnim { maximize() }
             }
-            else -> {
+            State.CLOSE -> {
+                println("maximize CLOSE")
                 visible()
                 closeToMinAnim { maximize() }
+            }
+            else -> {
+                println("maximize else")
             }
         }
     }
@@ -335,21 +356,29 @@ open class DraggablePanel @JvmOverloads constructor(
      * thu nhỏ layout
      */
     open fun minimize() {
+        println("minimize")
         mTempState = State.MIN
         if (!frameInitializing) {
+            println("minimize !frameInitializing")
             return
         }
         when (mCurrentState) {
             State.MAX -> {
+                println("minimize MAX")
                 maxToMinAnim { minimize() }
             }
             State.MIN -> {
+                println("minimize MIN")
                 visible()
                 updateState()
             }
-            else -> {
+            State.CLOSE -> {
+                println("minimize CLOSE")
                 visible()
                 closeToMinAnim { minimize() }
+            }
+            else -> {
+                println("minimize else")
             }
         }
     }
@@ -358,20 +387,27 @@ open class DraggablePanel @JvmOverloads constructor(
      * đóng layout
      */
     open fun close() {
+        println("close")
         mTempState = State.CLOSE
         if (!frameInitializing) {
             return
         }
         when (mCurrentState) {
             State.MAX -> {
+                println("close MAX")
                 maxToMinAnim { close() }
             }
             State.MIN -> {
+                println("close MIN")
                 minToCloseAnim { close() }
             }
-            else -> {
+            State.CLOSE -> {
+                println("close CLOSE")
                 gone()
                 updateState()
+            }
+            else -> {
+
             }
         }
     }
@@ -416,6 +452,8 @@ open class DraggablePanel @JvmOverloads constructor(
         if (marginTop == mCurrentMarginTop) return
         mCurrentMarginTop = marginTop
 
+        println("setMarginTop   $mCurrentMarginTop")
+
         val percent: Float = mCurrentMarginTop * 1f / mMarginTopWhenMin
         setPercent(percent)
     }
@@ -424,6 +462,7 @@ open class DraggablePanel @JvmOverloads constructor(
         if (mCurrentPercent == percent || percent > 1 || percent < 0) return
         mCurrentPercent = percent
 
+        println("setPercent  $mCurrentPercent")
         refresh()
     }
 
@@ -442,6 +481,8 @@ open class DraggablePanel @JvmOverloads constructor(
         layoutParams.rightMargin = (mMarginEdgeWhenMin * mCurrentPercent).toInt()
         layoutParams.bottomMargin = (mMarginBottomWhenMin * mCurrentPercent).toInt()
         frameDrag.layoutParams = layoutParams
+
+        println("refresh   " + layoutParams.topMargin)
 
         val toolBarHeight = when {
             firstViewMove -> {
@@ -469,20 +510,30 @@ open class DraggablePanel @JvmOverloads constructor(
         } else {
             (mHeightWhenMiddle - (mHeightWhenMiddle - mHeightWhenMin) * (mCurrentPercent - mPercentWhenMiddle) / (1 - mPercentWhenMiddle))
         }
+        println(DraggablePanel::class.java.simpleName + ".refreshFrameFirst   "
+                + frameFistHeight + "   "
+                + mCurrentPercent + "   "
+                + mPercentWhenMiddle + "   "
+                + mHeightWhenMax + "   "
+                + mHeightWhenMiddle + "   "
+                + mHeightWhenMin + "   ")
         appbarLayout.reHeight(frameFistHeight.toInt())
     }
 
     private fun minToMaxAnim(onEnd: () -> Unit) {
+        println("minToMaxAnim")
         mTempState = State.MAX
         springYAnim(0f, onEnd)
     }
 
     private fun maxToMinAnim(onEnd: () -> Unit) {
+        println("maxToMinAnim")
         mTempState = State.MIN
         springYAnim(mMarginTopWhenMin.toFloat(), onEnd)
     }
 
     private fun minToCloseAnim(onEnd: () -> Unit) {
+        println("minToCloseAnim")
         mTempState = State.CLOSE
         translationYAnim((mHeightWhenMinDefault + mMarginBottomWhenMin).toFloat()) {
             onEnd()
@@ -490,6 +541,7 @@ open class DraggablePanel @JvmOverloads constructor(
     }
 
     private fun closeToMinAnim(onEnd: () -> Unit) {
+        println("closeToMinAnim")
         mTempState = State.MIN
         translationYAnim((0).toFloat()) {
             onEnd()
@@ -497,6 +549,7 @@ open class DraggablePanel @JvmOverloads constructor(
     }
 
     private fun View.translationYAnim(value: Float, onEnd: () -> Unit) {
+        println("translationYAnim")
         translationYAnim(value, 300) {
             updateState()
             onEnd()
@@ -504,6 +557,7 @@ open class DraggablePanel @JvmOverloads constructor(
     }
 
     private fun springYAnim(endValue: Float, onEnd: () -> Unit) {
+        println("springYAnim")
         velocityY.springAnimation(0.toFloat(), mMarginTopWhenMin.toFloat(), mCurrentMarginTop.toFloat(), endValue, { value: Float ->
             setMarginTop(value.toInt())
         }, {
@@ -523,11 +577,18 @@ open class DraggablePanel @JvmOverloads constructor(
             } else {
                 null
             }
+            println("updateState  " + state?.name + "   " + mCurrentPercent + "    " + translationY)
 
             if (state != null && mCurrentState != state) {
                 mCurrentState = state
                 mDraggableListener?.onChangeState(mCurrentState!!)
             }
+        }
+    }
+
+    fun println(value: String) {
+        if (DEBUG) {
+            Log.d(javaClass.simpleName, value)
         }
     }
 
