@@ -46,13 +46,16 @@ open class DraggablePanel @JvmOverloads constructor(
         }
     }
 
-    var frameInitializing = false// toàn bộ giao diện đã được khởi tạo hay chưa
+    private var verticalOffsetOld = 0
 
-    var mTempState: State? = null// trạng thái của Draggable đang hướng đến
-    var mTempHeight = 0// chiều tao của view first đang hướng đến khi max
+    var showKeyboard = false
+    var frameInitializing = false// toàn bộ giao diện đã được khởi tạo hay chưa
 
     var needExpand = true// cần expand appbarLayout
     var firstViewMove = false// view first đang được di chuyển
+
+    var mTempState: State? = null// trạng thái của Draggable đang hướng đến
+    var mTempHeight = 0// chiều tao của view first đang hướng đến khi max
 
     var velocityY = 0f// tốc độ khi  MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL
     var velocityTracker: VelocityTracker? = null // tốc độ khi  MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL
@@ -185,7 +188,6 @@ open class DraggablePanel @JvmOverloads constructor(
 
         viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
             private var currentHeight = 0
-            private var tempHeight = mTempHeight
             override fun onGlobalLayout() {
                 if (height == currentHeight) return
                 currentHeight = height
@@ -198,30 +200,29 @@ open class DraggablePanel @JvmOverloads constructor(
                 val keyboardHeight = screenHeight - r.bottom
 
                 if (keyboardHeight > 200) {
-                    tempHeight = mTempHeight
-                    mTempHeight = mHeightWhenMaxDefault
-                    initFrame()
-                }else{
-                    initFrame()
+                    println("onGlobalLayout")
+                    showKeyboard = true
+                    appbarLayout.setExpanded(false, true)
+                } else {
+                    showKeyboard = false
                 }
+
+                initFrame()
             }
         })
 
         appbarLayout.addOnOffsetChangedListener(object : AppBarLayout.OnOffsetChangedListener {
 
-            private var verticalOffsetOld = 0
-
             override fun onOffsetChanged(appBarLayout: AppBarLayout?, verticalOffset: Int) {
-                if (frameInitializing && mCurrentPercent == 0f && !firstViewMove) {
-                    println("onOffsetChanged")
+                if (frameInitializing &&/* (mCurrentPercent == 0f || showKeyboard) &&*/ !firstViewMove) {
                     val offset = abs(verticalOffset)
                     val delta = offset - verticalOffsetOld
                     verticalOffsetOld = offset
 
                     mHeightWhenMin += delta
-                    mHeightWhenMiddle += delta
+                    mHeightWhenMiddle = mHeightWhenMiddleDefault + (mHeightWhenMin - mHeightWhenMinDefault)
 
-                    println("onOffsetChanged   " + mHeightWhenMin + "   " + mHeightWhenMiddle)
+                    println("onOffsetChanged   " + mHeightWhenMin + "   " + mHeightWhenMiddle + "   " + verticalOffset + "   " + delta)
                 }
             }
         })
@@ -233,22 +234,44 @@ open class DraggablePanel @JvmOverloads constructor(
     open fun initFrame() {
         frameInitializing = true
 
-        val params = frameFirst.layoutParams as CoordinatorLayout.LayoutParams
-        params.behavior = DragBehavior(frameSecond)
-        frameFirst.layoutParams = params
-
         mMarginTopWhenMin = height - mHeightWhenMinDefault - mMarginBottomWhenMin
-//        mMarginTopWhenMin = height - mHeightWhenMin - mMarginBottomWhenMin
-
-        mHeightWhenMax = mTempHeight
-        mHeightWhenMaxDefault = (width * 9 / 16f).toInt()
-
-        mHeightWhenMiddle = (height - mPercentWhenMiddle * mMarginBottomWhenMin - mPercentWhenMiddle * mMarginTopWhenMin).toInt()
-        mHeightWhenMiddleDefault = mHeightWhenMiddle
-
-        println("initFrame $mMarginTopWhenMin")
 
         if (mCurrentState == null) {
+            val params = frameFirst.layoutParams as CoordinatorLayout.LayoutParams
+            params.behavior = DragBehavior(frameSecond)
+            frameFirst.layoutParams = params
+        }
+
+        if (mCurrentState == null) {
+            mHeightWhenMax = mTempHeight
+            mHeightWhenMaxDefault = (width * 9 / 16f).toInt()
+        }
+
+        if (mCurrentState == null) {
+            mHeightWhenMiddle = (height - mPercentWhenMiddle * mMarginBottomWhenMin - mPercentWhenMiddle * mMarginTopWhenMin).toInt()
+            mHeightWhenMiddleDefault = mHeightWhenMiddle
+        }
+
+        println("initFrame "
+                + "       0: " + rootView.height
+                + "       1: " + height
+                + "       2: " + mCurrentPercent
+                + "       3: " + mCurrentMarginTop
+                + "       4: " + mHeightWhenMax
+                + "       5: " + mHeightWhenMaxDefault
+                + "       6: " + mHeightWhenMiddle
+                + "       7: " + mHeightWhenMiddleDefault
+                + "       8: " + mPercentWhenMiddle
+                + "       9: " + mHeightWhenMin
+                + "       1: " + mHeightWhenMinDefault
+                + "       2: " + mMarginTopWhenMin
+                + "       3: " + mMarginEdgeWhenMin
+                + "       4: " + mMarginBottomWhenMin
+                + "       5: " + verticalOffsetOld
+        )
+
+        if (mCurrentState == null) {
+
             translationY = (mHeightWhenMinDefault + mMarginBottomWhenMin).toFloat()
             setMarginTop(mMarginTopWhenMin)
             gone()
@@ -265,6 +288,7 @@ open class DraggablePanel @JvmOverloads constructor(
                 }
             }
         } else {
+
             refresh()
         }
 
@@ -324,7 +348,7 @@ open class DraggablePanel @JvmOverloads constructor(
                 appbarLayout.resizeAnimation(-1, mTempHeight, 300) {
                     mHeightWhenMax = mTempHeight
 
-                    if (mCurrentPercent != 0f || !needExpand) {
+                    if (mCurrentPercent != 0f || (!needExpand && !showKeyboard)) {
                         updateState()
                         return@resizeAnimation
                     }
@@ -530,6 +554,7 @@ open class DraggablePanel @JvmOverloads constructor(
                 + mHeightWhenMax + "   "
                 + mHeightWhenMiddle + "   "
                 + mHeightWhenMin + "   ")
+        test.reHeight(frameFistHeight.toInt())
         appbarLayout.reHeight(frameFistHeight.toInt())
     }
 

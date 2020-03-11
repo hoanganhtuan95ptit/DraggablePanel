@@ -12,7 +12,7 @@
             android:id="@+id/appbarLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#50FFBD00"
+            android:background="@android:color/transparent"
             app:elevation="0dp">
 
             <com.google.android.material.appbar.CollapsingToolbarLayout
@@ -25,7 +25,7 @@
                     android:id="@+id/toolbar"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="#80ED3554"
+                    android:background="@android:color/transparent"
                     app:layout_collapseMode="pin" />
             </com.google.android.material.appbar.CollapsingToolbarLayout>
         </com.google.android.material.appbar.AppBarLayout>
@@ -40,5 +40,13 @@
             android:id="@+id/frameFirst"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
+
     </com.hoanganhtuan95ptit.draggable.widget.DragFrame>
+
+    <View
+        android:layout_alignTop="@id/frameDrag"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/test"
+        android:background="#50044AC6"/>
 </merge>
