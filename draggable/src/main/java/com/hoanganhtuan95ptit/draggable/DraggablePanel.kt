@@ -85,7 +85,7 @@ open class DraggablePanel @JvmOverloads constructor(
 
         if (attrs != null) {
             val typedArray = context.obtainStyledAttributes(attrs, R.styleable.DraggablePanel)
-            mHeightWhenMax = typedArray.getDimensionPixelSize(R.styleable.DraggablePanel_height_when_max, 200.toPx())
+            mTempHeight = typedArray.getDimensionPixelSize(R.styleable.DraggablePanel_height_when_max, 200.toPx())
 
             mPercentWhenMiddle = typedArray.getFloat(R.styleable.DraggablePanel_percent_when_middle, 0.9f)
 
@@ -99,7 +99,7 @@ open class DraggablePanel @JvmOverloads constructor(
 
             typedArray.recycle()
         } else {
-            mHeightWhenMax = 200.toPx()
+            mTempHeight = 200.toPx()
 
             mPercentWhenMiddle = 0.9f
 
@@ -112,8 +112,7 @@ open class DraggablePanel @JvmOverloads constructor(
             mTempState = State.CLOSE
         }
 
-        mTempHeight = mHeightWhenMax
-        mHeightWhenMaxDefault = mHeightWhenMax
+        mHeightWhenMaxDefault = mTempHeight
         mHeightWhenMinDefault = mHeightWhenMin
 
         frameDrag.onTouchListener = object : DragFrame.OnTouchListener {
@@ -186,11 +185,25 @@ open class DraggablePanel @JvmOverloads constructor(
 
         viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
             private var currentHeight = 0
+            private var tempHeight = mTempHeight
             override fun onGlobalLayout() {
                 if (height == currentHeight) return
                 currentHeight = height
 
-                initFrame()
+                val r = Rect()
+
+                getWindowVisibleDisplayFrame(r)
+
+                val screenHeight = rootView.height
+                val keyboardHeight = screenHeight - r.bottom
+
+                if (keyboardHeight > 200) {
+                    tempHeight = mTempHeight
+                    mTempHeight = mHeightWhenMaxDefault
+                    initFrame()
+                }else{
+                    initFrame()
+                }
             }
         })
 
@@ -482,8 +495,6 @@ open class DraggablePanel @JvmOverloads constructor(
         layoutParams.bottomMargin = (mMarginBottomWhenMin * mCurrentPercent).toInt()
         frameDrag.layoutParams = layoutParams
 
-        println("refresh   " + layoutParams.topMargin)
-
         val toolBarHeight = when {
             firstViewMove -> {
                 (mHeightWhenMaxDefault - (mHeightWhenMaxDefault - mHeightWhenMinDefault) * mCurrentPercent).toInt()
@@ -495,6 +506,8 @@ open class DraggablePanel @JvmOverloads constructor(
                 mHeightWhenMinDefault
             }
         }
+
+        println("refresh   " + layoutParams.topMargin + "    " + toolBarHeight)
 
         toolbar.reHeight(toolBarHeight)
 
