@@ -18,6 +18,10 @@ class CustomActivity : AppCompatActivity() {
         setContentView(R.layout.activity_custom)
 
         draggablePanel.setDraggableListener(object : DraggablePanel.DraggableListener {
+            override fun onExpanded() {
+                super.onExpanded()
+            }
+
             override fun onChangeState(state: DraggablePanel.State) {
             }
 
