@@ -26,7 +26,7 @@ class DraggableSource @JvmOverloads constructor(
     override fun initFrame() {
         mWidthWhenMax = width
 
-        mWidthWhenMiddle = (width - mPercentWhenMiddle * mMarginEdgeWhenMin).toInt()
+        mWidthWhenMiddle = (width - mMidPercent * mMarginEdgeWhenMin).toInt()
 
         mWidthWhenMin = mHeightWhenMinDefault * 22 / 9
 
@@ -36,16 +36,16 @@ class DraggableSource @JvmOverloads constructor(
     override fun refreshFrameFirst() {
         super.refreshFrameFirst()
 
-        val width = if (mCurrentPercent < mPercentWhenMiddle) {
+        val width = if (mCurrentPercent < mMidPercent) {
             (mWidthWhenMax - (mWidthWhenMax - mWidthWhenMiddle) * mCurrentPercent)
         } else {
-            (mWidthWhenMiddle - (mWidthWhenMiddle - mWidthWhenMin) * (mCurrentPercent - mPercentWhenMiddle) / (1 - mPercentWhenMiddle))
+            (mWidthWhenMiddle - (mWidthWhenMiddle - mWidthWhenMin) * (mCurrentPercent - mMidPercent) / (1 - mMidPercent))
         }
 
         println(DraggableSource::class.java.simpleName + ".refreshFrameFirst "
                 + width + "  "
                 + mCurrentPercent + "  "
-                + mPercentWhenMiddle + "  "
+                + mMidPercent + "  "
                 + mWidthWhenMax + "  "
                 + mWidthWhenMiddle + "  "
                 + mWidthWhenMin + "  ")
