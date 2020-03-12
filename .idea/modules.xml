@@ -11,8 +11,9 @@
       <module fileurl="file://$PROJECT_DIR$/draggable/DraggablePanel-draggable.iml" filepath="$PROJECT_DIR$/draggable/DraggablePanel-draggable.iml" />
       <module fileurl="file://$PROJECT_DIR$/example/DraggablePanel-example.iml" filepath="$PROJECT_DIR$/example/DraggablePanel-example.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/DraggablePanelV2.iml" filepath="$PROJECT_DIR$/.idea/DraggablePanelV2.iml" />
-      <module fileurl="file://$PROJECT_DIR$/draggable/draggable.iml" filepath="$PROJECT_DIR$/draggable/draggable.iml" />
-      <module fileurl="file://$PROJECT_DIR$/example/example.iml" filepath="$PROJECT_DIR$/example/example.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Library-DraggablePanel.iml" filepath="$PROJECT_DIR$/Library-DraggablePanel.iml" group="DraggablePanel" />
+      <module fileurl="file://$PROJECT_DIR$/draggable/draggable.iml" filepath="$PROJECT_DIR$/draggable/draggable.iml" group="DraggablePanel/draggable" />
+      <module fileurl="file://$PROJECT_DIR$/example/example.iml" filepath="$PROJECT_DIR$/example/example.iml" group="DraggablePanel/example" />
     </modules>
   </component>
 </project>

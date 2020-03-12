@@ -43,10 +43,4 @@
 
     </com.hoanganhtuan95ptit.draggable.widget.DragFrame>
 
-    <View
-        android:layout_alignTop="@id/frameDrag"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/test"
-        android:background="#50044AC6"/>
 </merge>
