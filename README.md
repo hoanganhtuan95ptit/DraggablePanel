@@ -1,3 +1,6 @@
+
+Please switch to [DragView](https://github.com/tuanhav95/DragView), for the best support, thank you
+
 # DraggablePanel
 
 ![Alt text](output/ezgif.com-video-to-gif.gif) | ![Alt text](output/Screenshot_20190417-173713.png)  | ![Alt text](output/Screenshot_20190417-173738.png) 
