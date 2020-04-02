@@ -1,5 +1,5 @@
 
-Please switch to [DragView](https://github.com/tuanhav95/DragView), for the best support, thank you
+## Please switch to [DragView](https://github.com/tuanhav95/DragView), for the best support, thank you
 
 # DraggablePanel
 
