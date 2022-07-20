@@ -44,7 +44,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: test-reports
-          path: 'app/build/reports/tests/'
+          path: 'example/build/reports/tests/'
 
   android_test_job:
     name: Android Tests
@@ -81,7 +81,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: android-test-reports
-          path: 'app/build/reports/androidTests/'
+          path: 'example/build/reports/androidTests/'
 
   build_job:
     name: Building the APK
@@ -108,4 +108,4 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: DraggablePanel
-          path: app/build/outputs/apk/debug/**.apk
+          path: example/build/outputs/apk/debug/**.apk
